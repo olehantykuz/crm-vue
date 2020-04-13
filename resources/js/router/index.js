@@ -6,10 +6,10 @@ import Home from '../views/Home';
 Vue.use(Router);
 
 const router = new Router({
-    mode: 'history',
-    routes: [
-        { name: 'home', path: '/', component: Home },
-    ]
+  mode: 'history',
+  routes: [
+    {name: 'home', path: '/', component: Home},
+  ]
 });
 
 export default router;
