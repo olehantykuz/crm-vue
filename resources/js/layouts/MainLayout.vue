@@ -1,8 +1,12 @@
 <template>
   <div class="app-main-layout">
-    <navbar></navbar>
-    <sidebar></sidebar>
-    <main class="app-content">
+    <navbar
+      @toggle-sidebar="isOpen = !isOpen"
+    ></navbar>
+    <sidebar
+      v-model="isOpen"
+    ></sidebar>
+    <main class="app-content" :class="{full: !isOpen}">
       <div class="app-page">
         <router-view></router-view>
       </div>
@@ -22,7 +26,12 @@
 
   export default {
     name: "MainLayout",
-    components: {Navbar, Sidebar}
+    data: () => ({
+      isOpen: true
+    }),
+    components: {
+      Navbar, Sidebar
+    }
   }
 </script>
 
