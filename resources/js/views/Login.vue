@@ -68,7 +68,8 @@
 </template>
 
 <script>
-  import { email, required, minLength } from 'vuelidate/lib/validators'
+  import { email, required, minLength } from 'vuelidate/lib/validators';
+  import messages from '../utils/messages';
 
   export default {
     name: 'Login',
@@ -94,6 +95,12 @@
         console.log(formData);
 
         this.$router.push({ name: 'home' })
+      }
+    },
+    mounted() {
+      const key = this.$route.query.message;
+      if (messages[key]) {
+        this.$message(messages[key]);
       }
     }
   }
