@@ -13,8 +13,11 @@ window.Vue = require('vue');
 
 import router from './router';
 import store from './store';
+import dateFilter from './filters/date.filter';
 
 import App from './App';
+
+Vue.filter('date', dateFilter);
 
 const app = new Vue({
   el: '#app',
