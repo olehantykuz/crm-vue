@@ -1,19 +1,11 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import Home from '../views/Home';
-
 Vue.use(Router);
 
 const router = new Router({
   mode: 'history',
   routes: [
-    {
-      name: 'home',
-      path: '/',
-      meta: {layout: 'main'},
-      component: Home
-    },
     {
       path: '/login',
       name: 'login',
@@ -27,16 +19,22 @@ const router = new Router({
       component: () => import('../views/Register')
     },
     {
+      name: 'home',
+      path: '/',
+      meta: {layout: 'main'},
+      component: () => import('../views/Home')
+    },
+    {
       path: '/categories',
       name: 'categories',
       meta: {layout: 'main'},
       component: () => import('../views/Categories')
     },
     {
-      path: '/detail-record',
-      name: 'detail-record',
+      path: '/detail/:id',
+      name: 'detail',
       meta: {layout: 'main'},
-      component: () => import('../views/DetailRecord')
+      component: () => import('../views/Detail')
     },
     {
       path: '/history',
