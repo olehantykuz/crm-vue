@@ -70,6 +70,7 @@
 <script>
   import { email, required, minLength } from 'vuelidate/lib/validators';
   import messages from '../utils/messages';
+  import { authService } from '../api/auth';
 
   export default {
     name: 'Login',
@@ -92,9 +93,15 @@
           email: this.email,
           password: this.password,
         };
-        console.log(formData);
 
-        this.$router.push({ name: 'home' })
+        authService.getCookies().then(() => {
+          authService.login(formData).then(result => {
+            console.log({result});
+            this.$router.push({ name: 'home' });
+          }).catch(err => {
+            console.log({err});
+          });
+        })
       }
     },
     mounted() {
