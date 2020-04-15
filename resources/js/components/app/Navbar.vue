@@ -40,8 +40,10 @@
 </template>
 
 <script>
+  import { authService } from '../../api/auth';
+
   export default {
-    name: "Navbar",
+    name: 'Navbar',
     data: () => ({
       date: new Date(),
       interval: null,
@@ -49,8 +51,9 @@
     }),
     methods: {
       logout() {
-        console.log('logout');
-        this.$router.push({name: 'login', query: {message: 'logout'}});
+        authService.logout().then(response => {
+          this.$router.push({name: 'login', query: {message: 'logout'}});
+        });
       }
     },
     mounted() {
