@@ -59,7 +59,7 @@ class AuthController extends Controller
         $user = Auth::user();
 
         return response()->json([
-            'user' => $user,
+            'user' => new \App\Http\Resources\User($user),
         ]);
     }
 
