@@ -19,6 +19,12 @@ Route::group([
     'middleware' => 'api',
 ], function () {
     Route::post('register', 'AuthController@register');
+    Route::post('login', 'AuthController@login');
+
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::post('logout', 'AuthController@logout');
+    });
+
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
