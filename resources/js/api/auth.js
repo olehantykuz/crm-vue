@@ -20,6 +20,13 @@ const login = data => {
   });
 };
 
+const authUser = () => {
+  return axios({
+    url: `${baseUrl}/me`,
+    method: 'get',
+  }).then(response => response);
+};
+
 const getCookies = () => {
   return axios({
     url: `/sanctum/csrf-cookie`,
@@ -38,4 +45,4 @@ const logout = () => {
   });
 };
 
-export const authService = { register, getCookies, login, logout };
+export const authService = { register, getCookies, login, authUser, logout };
