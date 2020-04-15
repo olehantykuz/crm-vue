@@ -40,8 +40,6 @@
 </template>
 
 <script>
-  import { authService } from '../../api/auth';
-
   export default {
     name: 'Navbar',
     data: () => ({
@@ -50,10 +48,8 @@
       dropdown: null,
     }),
     methods: {
-      logout() {
-        authService.logout().then(response => {
-          this.$router.push({name: 'login', query: {message: 'logout'}});
-        });
+      async logout() {
+        await this.$store.dispatch('logout');
       }
     },
     mounted() {

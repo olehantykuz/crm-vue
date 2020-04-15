@@ -88,7 +88,6 @@
 
 <script>
   import { email, minLength, required } from 'vuelidate/lib/validators';
-  import { authService } from '../api/auth';
 
   export default {
     name: 'Register',
@@ -105,7 +104,7 @@
       agree: { checked: v => v },
     },
     methods: {
-      submitHandler() {
+      async submitHandler() {
         this.$v.$touch();
         if (this.$v.$invalid) {
           return;
@@ -116,11 +115,8 @@
           password: this.password,
           name: this.name,
         };
-        authService.register(formData).then(response => {
-          this.$router.push({ name: 'login', query: { message: 'register' } });
-        }).catch(error => {
-          console.log({ error });
-        });
+
+        await this.$store.dispatch('register', formData);
       }
     }
   }

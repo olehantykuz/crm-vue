@@ -70,7 +70,6 @@
 <script>
   import { email, required, minLength } from 'vuelidate/lib/validators';
   import messages from '../utils/messages';
-  import { authService } from '../api/auth';
 
   export default {
     name: 'Login',
@@ -83,7 +82,7 @@
       password: { required, minLength: minLength(6) },
     },
     methods: {
-      submitHandler() {
+      async submitHandler() {
         this.$v.$touch();
         if (this.$v.$invalid) {
           return;
@@ -94,13 +93,7 @@
           password: this.password,
         };
 
-        authService.getCookies().then(() => {
-          authService.login(formData).then(result => {
-            this.$router.push({ name: 'home' });
-          }).catch(err => {
-            console.log({err});
-          });
-        })
+        await this.$store.dispatch('login', formData);
       }
     },
     mounted() {
