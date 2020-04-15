@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\RegisterRequest;
 use App\Http\Requests\Api\LoginRequest;
 use App\Models\User;
+use App\Http\Resources\User as UserResource;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -59,7 +60,7 @@ class AuthController extends Controller
         $user = Auth::user();
 
         return response()->json([
-            'user' => new \App\Http\Resources\User($user),
+            'user' => new UserResource($user),
         ]);
     }
 
@@ -71,5 +72,18 @@ class AuthController extends Controller
         Auth::guard('web')->logout();
 
         return new JsonResponse(null, 204);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function user()
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        return response()->json([
+            'user' => new UserResource($user),
+        ]);
     }
 }
