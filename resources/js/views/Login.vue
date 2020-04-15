@@ -96,7 +96,6 @@
 
         authService.getCookies().then(() => {
           authService.login(formData).then(result => {
-            console.log({result});
             this.$router.push({ name: 'home' });
           }).catch(err => {
             console.log({err});
