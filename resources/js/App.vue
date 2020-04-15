@@ -8,6 +8,7 @@
 <script>
   import AuthLayout from './layouts/AuthLayout';
   import MainLayout from './layouts/MainLayout';
+  import { authService } from './api/auth';
 
   export default {
     name: "App",
@@ -19,6 +20,9 @@
       layout() {
         return (this.$route.meta.layout || 'auth') + '-layout';
       }
+    },
+    mounted() {
+      authService.authUser();
     }
   }
 </script>
