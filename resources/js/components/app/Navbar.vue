@@ -16,7 +16,7 @@
             data-target="dropdown"
             ref="dropdown"
           >
-            USER NAME
+            {{this.info.name || 'USER NAME'}}
             <i class="material-icons right">arrow_drop_down</i>
           </a>
 
@@ -40,6 +40,8 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
+
   export default {
     name: 'Navbar',
     data: () => ({
@@ -51,6 +53,9 @@
       async logout() {
         await this.$store.dispatch('logout');
       }
+    },
+    computed: {
+      ...mapGetters(['info']),
     },
     mounted() {
       this.interval = setInterval(() => {
