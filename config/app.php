@@ -119,6 +119,9 @@ return [
     |
     */
 
+    'default_budget' => env('DEFAULT_BUDGET', 1000),
+    'default_currency' => env('DEFAULT_CURRENCY', 'UAH'),
+
     'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',

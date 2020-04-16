@@ -38,4 +38,16 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * @return array
+     */
+    public function getDefaultBudget()
+    {
+        return [
+            'total' => config('app.default_budget'),
+            'currency' => config('app.default_currency'),
+        ];
+    }
+
 }
