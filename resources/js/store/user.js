@@ -18,6 +18,9 @@ export default {
   mutations: {
     setUserInfo(state, userInfo) {
       state.info = userInfo;
+    },
+    clearUserInfo(state) {
+      state.info = {};
     }
   },
   getters: {
