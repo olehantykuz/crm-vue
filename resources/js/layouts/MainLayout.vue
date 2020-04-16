@@ -23,14 +23,25 @@
 <script>
   import Navbar from '../components/app/Navbar';
   import Sidebar from '../components/app/Sidebar';
+  import { isAuth } from '../helpers';
 
   export default {
     name: "MainLayout",
+    components: {
+      Navbar, Sidebar
+    },
     data: () => ({
       isOpen: true
     }),
-    components: {
-      Navbar, Sidebar
+    methods: {
+      async getAuthUser() {
+        await this.$store.dispatch('getAuthUser');
+      },
+    },
+    mounted() {
+      if (isAuth() && !Object.keys(this.$store.getters.info).length) {
+        this.getAuthUser();
+      }
     }
   }
 </script>
