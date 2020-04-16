@@ -23,14 +23,27 @@
 <script>
   import Navbar from '../components/app/Navbar';
   import Sidebar from '../components/app/Sidebar';
+  import { isAuth } from '../helpers';
+  import { mapActions, mapGetters } from 'vuex';
 
   export default {
     name: "MainLayout",
+    components: {
+      Navbar, Sidebar
+    },
     data: () => ({
       isOpen: true
     }),
-    components: {
-      Navbar, Sidebar
+    computed: {
+      ...mapGetters(['info']),
+    },
+    methods: {
+      ...mapActions(['getAuthUser']),
+    },
+    async mounted() {
+      if (isAuth() && !Object.keys(this.info).length) {
+        await this.getAuthUser();
+      }
     }
   }
 </script>

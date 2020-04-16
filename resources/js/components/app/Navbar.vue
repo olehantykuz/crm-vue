@@ -16,7 +16,7 @@
             data-target="dropdown"
             ref="dropdown"
           >
-            USER NAME
+            {{this.info.name || 'USER NAME'}}
             <i class="material-icons right">arrow_drop_down</i>
           </a>
 
@@ -28,7 +28,7 @@
             </li>
             <li class="divider" tabindex="-1"></li>
             <li>
-              <a href="#" @click.prevent="logout" class="black-text">
+              <a href="#" @click.prevent="signOut" class="black-text">
                 <i class="material-icons">assignment_return</i>Выйти
               </a>
             </li>
@@ -40,6 +40,8 @@
 </template>
 
 <script>
+  import { mapGetters, mapActions } from 'vuex';
+
   export default {
     name: 'Navbar',
     data: () => ({
@@ -48,9 +50,13 @@
       dropdown: null,
     }),
     methods: {
-      async logout() {
-        await this.$store.dispatch('logout');
+      ...mapActions(['logout']),
+      async signOut() {
+        await this.logout();
       }
+    },
+    computed: {
+      ...mapGetters(['info']),
     },
     mounted() {
       this.interval = setInterval(() => {

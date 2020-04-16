@@ -5,12 +5,12 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
+
   export default {
     name: 'AuthLayout',
     computed: {
-      error() {
-        return this.$store.getters.error;
-      }
+      ...mapGetters(['error']),
     },
     watch: {
       error(err) {
