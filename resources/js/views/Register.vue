@@ -45,28 +45,27 @@
           {{password.length}} символов
         </small>
       </div>
-    </div>
-    <div class="input-field">
-      <input
-        id="name"
-        type="text"
-        v-model.trim="name"
-        :class="{invalid: ($v.name.$dirty && !$v.name.required)}"
-      >
-      <label for="name">Имя</label>
-      <small
-        class="helper-text invalid"
-        v-if="$v.name.$dirty && !$v.name.required"
-      >
-        Поле Name не должно быть пустым
-      </small>
-    </div>
-    <p>
-      <label>
-        <input type="checkbox" v-model="agree"/>
-        <span>С правилами согласен</span>
-      </label>
-    </p>
+      <div class="input-field">
+        <input
+          id="name"
+          type="text"
+          v-model.trim="name"
+          :class="{invalid: ($v.name.$dirty && !$v.name.required)}"
+        >
+        <label for="name">Имя</label>
+        <small
+          class="helper-text invalid"
+          v-if="$v.name.$dirty && !$v.name.required"
+        >
+          Поле Name не должно быть пустым
+        </small>
+      </div>
+      <p>
+        <label>
+          <input type="checkbox" v-model="agree"/>
+          <span>С правилами согласен</span>
+        </label>
+      </p>
     </div>
     <div class="card-action">
       <div>
@@ -105,7 +104,7 @@
       agree: { checked: v => v },
     },
     methods: {
-      submitHandler() {
+      async submitHandler() {
         this.$v.$touch();
         if (this.$v.$invalid) {
           return;
@@ -116,9 +115,8 @@
           password: this.password,
           name: this.name,
         };
-        console.log(formData);
 
-        this.$router.push({ name: 'home' })
+        await this.$store.dispatch('register', formData);
       }
     }
   }

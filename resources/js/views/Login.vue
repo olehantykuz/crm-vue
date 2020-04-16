@@ -82,7 +82,7 @@
       password: { required, minLength: minLength(6) },
     },
     methods: {
-      submitHandler() {
+      async submitHandler() {
         this.$v.$touch();
         if (this.$v.$invalid) {
           return;
@@ -92,9 +92,8 @@
           email: this.email,
           password: this.password,
         };
-        console.log(formData);
 
-        this.$router.push({ name: 'home' })
+        await this.$store.dispatch('login', formData);
       }
     },
     mounted() {

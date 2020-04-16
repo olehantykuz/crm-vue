@@ -41,16 +41,15 @@
 
 <script>
   export default {
-    name: "Navbar",
+    name: 'Navbar',
     data: () => ({
       date: new Date(),
       interval: null,
       dropdown: null,
     }),
     methods: {
-      logout() {
-        console.log('logout');
-        this.$router.push({name: 'login', query: {message: 'logout'}});
+      async logout() {
+        await this.$store.dispatch('logout');
       }
     },
     mounted() {
