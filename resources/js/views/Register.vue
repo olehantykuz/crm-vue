@@ -87,40 +87,40 @@
 </template>
 
 <script>
-  import { email, minLength, required } from 'vuelidate/lib/validators';
-  import { mapActions } from 'vuex';
+import { email, minLength, required } from 'vuelidate/lib/validators';
+import { mapActions } from 'vuex';
 
-  export default {
-    name: 'Register',
-    data: () => ({
-      email: '',
-      password: '',
-      name: '',
-      agree: false,
-    }),
-    validations: {
-      email: { email, required },
-      password: { required, minLength: minLength(6) },
-      name: { required },
-      agree: { checked: v => v },
-    },
-    methods: {
-      ...mapActions(['register']),
-      async submitHandler() {
-        this.$v.$touch();
-        if (this.$v.$invalid) {
-          return;
-        }
-
-        const formData = {
-          email: this.email,
-          password: this.password,
-          name: this.name,
-        };
-        await this.register(formData);
+export default {
+  name: 'Register',
+  data: () => ({
+    email: '',
+    password: '',
+    name: '',
+    agree: false,
+  }),
+  validations: {
+    email: { email, required },
+    password: { required, minLength: minLength(6) },
+    name: { required },
+    agree: { checked: v => v },
+  },
+  methods: {
+    ...mapActions(['register']),
+    async submitHandler() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
       }
+
+      const formData = {
+        email: this.email,
+        password: this.password,
+        name: this.name,
+      };
+      await this.register(formData);
     }
   }
+}
 </script>
 
 <style scoped>

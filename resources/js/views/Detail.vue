@@ -25,9 +25,9 @@
 </template>
 
 <script>
-  export default {
-    name: "DetailRecord"
-  }
+export default {
+  name: 'DetailRecord'
+}
 </script>
 
 <style scoped>
