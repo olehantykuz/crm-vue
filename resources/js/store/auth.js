@@ -21,14 +21,6 @@ export default {
         commit('setError', e.response.data.error);
       }
     },
-    async getAuthUser({ dispatch, commit }) {
-      try {
-        commit('clearError');
-        await authService.authUser();
-      } catch (e) {
-        commit('setError', e.response.data.error);
-      }
-    },
     async logout({ dispatch, commit }) {
       try {
         commit('clearError');
