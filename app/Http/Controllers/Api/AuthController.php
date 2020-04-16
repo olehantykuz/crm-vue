@@ -31,7 +31,7 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), with(new RegisterRequest())->rules());
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+            return $this->errorResponse($validator->errors()->toArray());
         }
 
         $this->userService->create($request->all());
@@ -47,13 +47,13 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), with(new LoginRequest())->rules());
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+            return $this->errorResponse($validator->errors()->toArray());
         }
 
         $credentials = request(['email', 'password']);
 
         if (! $token = Auth::attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return $this->errorResponse('Invalid email or password', 401);
         }
 
         /** @var User $user */
