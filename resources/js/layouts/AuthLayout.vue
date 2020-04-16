@@ -6,7 +6,19 @@
 
 <script>
   export default {
-    name: "AuthLayout"
+    name: 'AuthLayout',
+    computed: {
+      error() {
+        return this.$store.getters.error;
+      }
+    },
+    watch: {
+      error(err) {
+        if (err) {
+          this.$error(err);
+        }
+      }
+    }
   }
 </script>
 
