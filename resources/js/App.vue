@@ -13,14 +13,14 @@ export default {
   name: 'App',
   components: {
     AuthLayout,
-    MainLayout
+    MainLayout,
   },
   computed: {
     layout() {
-      return (this.$route.meta.layout || 'auth') + '-layout';
-    }
+      return `${(this.$route.meta.layout || 'auth')}-layout`;
+    },
   },
-}
+};
 </script>
 
 <style scoped>

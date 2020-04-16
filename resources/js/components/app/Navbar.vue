@@ -53,7 +53,7 @@ export default {
     ...mapActions(['logout']),
     async signOut() {
       await this.logout();
-    }
+    },
   },
   computed: {
     ...mapGetters(['info']),
@@ -62,8 +62,8 @@ export default {
     this.interval = setInterval(() => {
       this.date = new Date();
     }, 1000);
-    this.dropdown = M.Dropdown.init(this.$refs.dropdown, {
-      constrainWidth: false
+    this.dropdown = window.M.Dropdown.init(this.$refs.dropdown, {
+      constrainWidth: false,
     });
   },
   beforeDestroy() {
@@ -71,8 +71,8 @@ export default {
     if (this.dropdown && this.dropdown.destroy) {
       this.dropdown.destroy();
     }
-  }
-}
+  },
+};
 </script>
 
 <style scoped>

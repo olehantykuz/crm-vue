@@ -67,8 +67,8 @@
 
 <script>
 export default {
-  name: 'Record'
-}
+  name: 'Record',
+};
 </script>
 
 <style scoped>

@@ -21,18 +21,18 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Navbar from '../components/app/Navbar';
 import Sidebar from '../components/app/Sidebar';
 import { isAuth } from '../helpers';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'MainLayout',
   components: {
-    Navbar, Sidebar
+    Navbar, Sidebar,
   },
   data: () => ({
-    isOpen: true
+    isOpen: true,
   }),
   computed: {
     ...mapGetters(['info']),
@@ -44,8 +44,8 @@ export default {
     if (isAuth() && !Object.keys(this.info).length) {
       await this.getAuthUser();
     }
-  }
-}
+  },
+};
 </script>
 
 <style scoped>

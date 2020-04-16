@@ -17,9 +17,9 @@ export default {
       if (err) {
         this.$error(err);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>

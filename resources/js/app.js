@@ -13,9 +13,10 @@ Vue.use(Vuelidate);
 Vue.use(messagePlugin);
 Vue.filter('date', dateFilter);
 
-const app = new Vue({
+// eslint-disable-next-line no-new
+new Vue({
   el: '#app',
   store,
   router,
-  render: h => h(App)
+  render: (h) => h(App),
 });

@@ -13,5 +13,5 @@ export default function dateFilter(value, format = 'date') {
     options.second = '2-digit';
   }
 
-  return Intl.DateTimeFormat('ru-Ru', options).format(new Date(value))
+  return Intl.DateTimeFormat('ru-Ru', options).format(new Date(value));
 }

@@ -24,8 +24,8 @@
 
 <script>
 export default {
-  name: 'Planning'
-}
+  name: 'Planning',
+};
 </script>
 
 <style scoped>

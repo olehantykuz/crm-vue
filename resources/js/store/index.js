@@ -8,7 +8,7 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    error: null
+    error: null,
   },
   actions: {},
   mutations: {
@@ -17,15 +17,15 @@ const store = new Vuex.Store({
     },
     clearError(state) {
       state.error = null;
-    }
+    },
   },
   getters: {
-    error: state => state.error,
+    error: (state) => state.error,
   },
   modules: {
     auth,
     user,
-  }
+  },
 });
 
 export default store;

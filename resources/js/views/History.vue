@@ -44,8 +44,8 @@
 
 <script>
 export default {
-  name: 'History'
-}
+  name: 'History',
+};
 </script>
 
 <style scoped>

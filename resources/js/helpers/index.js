@@ -1,5 +1,3 @@
-const isAuth = () => {
-  return JSON.parse(localStorage.getItem('auth'));
-}
+export const isAuth = () => JSON.parse(localStorage.getItem('auth'));
 
-export { isAuth };
+export default { isAuth };
