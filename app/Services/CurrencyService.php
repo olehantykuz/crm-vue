@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Http;
 class CurrencyService
 {
     protected $accessKey;
+    /** @var string  */
     protected $baseCurrency;
     protected $baseUrl;
 
@@ -57,11 +58,27 @@ class CurrencyService
     }
 
     /**
+     * @return string
+     */
+    public function getDefaultCurrencyCode()
+    {
+        return $this->baseCurrency;
+    }
+
+    /**
+     * @return Currency[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getAll()
+    {
+        return Currency::all();
+    }
+
+    /**
      * @return array
      */
     public function getCurrencyCodes()
     {
-        return Currency::all()
+        return $this->getAll()
             ->pluck('code')
             ->toArray();
     }
