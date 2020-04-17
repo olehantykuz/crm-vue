@@ -18,6 +18,7 @@ Route::group([
     'namespace' => 'Api',
     'middleware' => 'api',
 ], function () {
+    Route::get('currencies', 'CurrencyController@conversation');
     Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
 
