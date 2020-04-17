@@ -30,4 +30,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'fixer' => [
+        'access_key' => env('FIXER_ACCESS_KEY'),
+    ],
+
 ];
