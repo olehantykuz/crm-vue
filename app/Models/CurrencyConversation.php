@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CurrencyConversation extends Model
 {
-    protected $table = 'currencies';
+    protected $table = 'currency_conversations';
     protected $fillable = [
         'rate',
     ];
