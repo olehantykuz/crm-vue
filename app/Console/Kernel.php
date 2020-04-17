@@ -25,7 +25,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+         $schedule->command(CurrencyRefreshConversationRate::class)
+             ->weekdays()
+             ->hourly()
+             ->between('8:00', '17:00');
     }
 
     /**
