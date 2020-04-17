@@ -5,21 +5,21 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 
-  export default {
-    name: 'AuthLayout',
-    computed: {
-      ...mapGetters(['error']),
-    },
-    watch: {
-      error(err) {
-        if (err) {
-          this.$error(err);
-        }
+export default {
+  name: 'AuthLayout',
+  computed: {
+    ...mapGetters(['error']),
+  },
+  watch: {
+    error(err) {
+      if (err) {
+        this.$error(err);
       }
-    }
-  }
+    },
+  },
+};
 </script>
 
 <style scoped>

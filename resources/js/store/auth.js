@@ -1,9 +1,9 @@
-import { authService } from '../api/auth';
+import authService from '../api/auth';
 import router from '../router';
 
 export default {
   actions: {
-    async login({ dispatch, commit }, { email, password }) {
+    async login({ commit }, { email, password }) {
       try {
         commit('clearError');
         await authService.login({ email, password });
@@ -12,7 +12,7 @@ export default {
         commit('setError', e.response.data.error);
       }
     },
-    async register({ dispatch, commit }, { email, password, name }) {
+    async register({ commit }, { email, password, name }) {
       try {
         commit('clearError');
         await authService.register({ email, password, name });
@@ -21,15 +21,15 @@ export default {
         commit('setError', e.response.data.error);
       }
     },
-    async logout({ dispatch, commit }) {
+    async logout({ commit }) {
       try {
         commit('clearError');
         await authService.logout();
-        await router.push({name: 'login', query: {message: 'logout'}});
+        await router.push({ name: 'login', query: { message: 'logout' } });
         commit('clearUserInfo');
       } catch (e) {
         commit('setError', e.response.data.error);
       }
     },
-  }
+  },
 };

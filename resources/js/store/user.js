@@ -1,11 +1,11 @@
-import { authService } from '../api/auth';
+import authService from '../api/auth';
 
 export default {
   state: {
     info: {},
   },
   actions: {
-    async getAuthUser({ dispatch, commit }) {
+    async getAuthUser({ commit }) {
       try {
         commit('clearError');
         const response = await authService.authUser();
@@ -21,9 +21,9 @@ export default {
     },
     clearUserInfo(state) {
       state.info = {};
-    }
+    },
   },
   getters: {
-    info: s => s.info,
+    info: (s) => s.info,
   },
 };

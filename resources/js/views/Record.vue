@@ -5,10 +5,11 @@
     </div>
 
     <form class="form">
-      <div class="input-field" >
+      <div class="input-field">
         <select>
           <option
-          >name cat</option>
+          >name cat
+          </option>
         </select>
         <label>Выберите категорию</label>
       </div>
@@ -65,9 +66,9 @@
 </template>
 
 <script>
-  export default {
-    name: "Record"
-  }
+export default {
+  name: 'Record',
+};
 </script>
 
 <style scoped>

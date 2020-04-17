@@ -7,7 +7,10 @@
           id="email"
           type="text"
           v-model.trim="email"
-          :class="{invalid: ($v.email.$dirty && !$v.email.required) || ($v.email.$dirty && !$v.email.email)}"
+          :class="{
+            invalid: ($v.email.$dirty && !$v.email.required)
+            || ($v.email.$dirty && !$v.email.email)
+          }"
         >
         <label for="email">Email</label>
         <small
@@ -28,7 +31,10 @@
           id="password"
           type="password"
           v-model.trim="password"
-          :class="{invalid: ($v.password.$dirty && !$v.password.required) || ($v.password.$dirty && !$v.password.minLength)}"
+          :class="{
+            invalid: ($v.password.$dirty && !$v.password.required)
+            || ($v.password.$dirty && !$v.password.minLength)
+          }"
         >
         <label for="password">Пароль</label>
         <small
@@ -41,8 +47,9 @@
           class="helper-text invalid"
           v-else-if="$v.password.$dirty && !$v.password.minLength"
         >
-          Длина пароля дожна быть как минимум {{$v.password.$params.minLength.min}} символов. Сейчас длина пароля
-          {{password.length}} символов
+          Длина пароля дожна быть как минимум
+          {{` ${$v.password.$params.minLength.min} `}} символов. Сейчас длина пароля
+          {{` ${password.length} `}} символов
         </small>
       </div>
       <div class="input-field">
@@ -87,40 +94,40 @@
 </template>
 
 <script>
-  import { email, minLength, required } from 'vuelidate/lib/validators';
-  import { mapActions } from 'vuex';
+import { email, minLength, required } from 'vuelidate/lib/validators';
+import { mapActions } from 'vuex';
 
-  export default {
-    name: 'Register',
-    data: () => ({
-      email: '',
-      password: '',
-      name: '',
-      agree: false,
-    }),
-    validations: {
-      email: { email, required },
-      password: { required, minLength: minLength(6) },
-      name: { required },
-      agree: { checked: v => v },
-    },
-    methods: {
-      ...mapActions(['register']),
-      async submitHandler() {
-        this.$v.$touch();
-        if (this.$v.$invalid) {
-          return;
-        }
-
-        const formData = {
-          email: this.email,
-          password: this.password,
-          name: this.name,
-        };
-        await this.register(formData);
+export default {
+  name: 'Register',
+  data: () => ({
+    email: '',
+    password: '',
+    name: '',
+    agree: false,
+  }),
+  validations: {
+    email: { email, required },
+    password: { required, minLength: minLength(6) },
+    name: { required },
+    agree: { checked: (v) => v },
+  },
+  methods: {
+    ...mapActions(['register']),
+    async submitHandler() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
       }
-    }
-  }
+
+      const formData = {
+        email: this.email,
+        password: this.password,
+        name: this.name,
+      };
+      await this.register(formData);
+    },
+  },
+};
 </script>
 
 <style scoped>

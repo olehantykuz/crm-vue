@@ -40,39 +40,39 @@
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
-  export default {
-    name: 'Navbar',
-    data: () => ({
-      date: new Date(),
-      interval: null,
-      dropdown: null,
-    }),
-    methods: {
-      ...mapActions(['logout']),
-      async signOut() {
-        await this.logout();
-      }
+export default {
+  name: 'Navbar',
+  data: () => ({
+    date: new Date(),
+    interval: null,
+    dropdown: null,
+  }),
+  methods: {
+    ...mapActions(['logout']),
+    async signOut() {
+      await this.logout();
     },
-    computed: {
-      ...mapGetters(['info']),
-    },
-    mounted() {
-      this.interval = setInterval(() => {
-        this.date = new Date();
-      }, 1000);
-      this.dropdown = M.Dropdown.init(this.$refs.dropdown, {
-        constrainWidth: false
-      });
-    },
-    beforeDestroy() {
-      clearInterval(this.interval);
-      if (this.dropdown && this.dropdown.destroy) {
-        this.dropdown.destroy();
-      }
+  },
+  computed: {
+    ...mapGetters(['info']),
+  },
+  mounted() {
+    this.interval = setInterval(() => {
+      this.date = new Date();
+    }, 1000);
+    this.dropdown = window.M.Dropdown.init(this.$refs.dropdown, {
+      constrainWidth: false,
+    });
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
+    if (this.dropdown && this.dropdown.destroy) {
+      this.dropdown.destroy();
     }
-  }
+  },
+};
 </script>
 
 <style scoped>

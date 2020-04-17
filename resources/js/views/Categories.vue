@@ -44,7 +44,7 @@
             </div>
 
             <form>
-              <div class="input-field" >
+              <div class="input-field">
                 <select>
                   <option>Category</option>
                 </select>
@@ -79,9 +79,9 @@
 </template>
 
 <script>
-  export default {
-    name: "Categories"
-  }
+export default {
+  name: 'Categories',
+};
 </script>
 
 <style scoped>
