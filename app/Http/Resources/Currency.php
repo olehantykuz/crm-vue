@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Currency extends JsonResource
@@ -17,6 +18,7 @@ class Currency extends JsonResource
         return [
             'code' => $this->code,
             'rate' => $this->conversation ? $this->conversation->rate : null,
+            'date' => $this->updated_at->timestamp ?? Carbon::now()->timestamp,
         ];
     }
 }
