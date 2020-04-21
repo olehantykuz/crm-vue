@@ -6,7 +6,7 @@
 
         <p
           class="currency-line"
-          v-for="curr of currencies"
+          v-for="curr of currencyCodes"
           :key="curr"
         >
           <span>
@@ -23,7 +23,7 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'HomeBill',
-  props: ['rates', 'baseCurrency'],
+  props: ['rates', 'baseCurrency', 'currencyCodes'],
   computed: {
     ...mapGetters(['info']),
     base() {
@@ -32,9 +32,6 @@ export default {
       return bill
         ? bill.total / (this.rates[bill.currency].rate / this.rates[this.baseCurrency].rate)
         : null;
-    },
-    currencies() {
-      return Object.keys(this.rates);
     },
   },
   methods: {

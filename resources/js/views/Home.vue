@@ -12,16 +12,21 @@
 
     <div v-else class="row">
       <home-bill
-        :rates="currency.rates || {}"
-        :baseCurrency="currency.baseCurrency"
+        :rates="currencyConversation"
+        :baseCurrency="baseCurrency"
+        :currencyCodes="currencyCodes"
       ></home-bill>
-      <home-currency></home-currency>
+      <home-currency
+        :rates="currencyConversation"
+        :baseCurrency="baseCurrency"
+        :currencyCodes="currencyCodes"
+      ></home-currency>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import HomeBill from '../components/HomeBill';
 import HomeCurrency from '../components/HomeCurrency';
@@ -29,16 +34,16 @@ import HomeCurrency from '../components/HomeCurrency';
 export default {
   name: 'Home',
   components: { HomeCurrency, HomeBill },
-  data: () => ({
-    loading: true,
-    currency: null,
-  }),
   methods: {
     ...mapActions(['fetchCurrencyConversation']),
   },
-  async mounted() {
-    this.currency = await this.fetchCurrencyConversation();
-    this.loading = false;
+  computed: {
+    ...mapGetters([
+      'fetchingCurrencies', 'currencyConversation', 'baseCurrency', 'currencyCodes',
+    ]),
+    loading() {
+      return this.fetchingCurrencies;
+    },
   },
 };
 </script>
