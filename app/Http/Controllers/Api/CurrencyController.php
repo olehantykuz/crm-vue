@@ -16,7 +16,9 @@ class CurrencyController extends Controller
     public function conversation(CurrencyService $service)
     {
         return response()->json([
-            'currencies' => CurrencyResource::collection($service->getAll()),
+            'rates' => CurrencyResource::collection(
+                $service->getAll()->keyBy('code')
+            ),
             'baseCurrency' => $service->getDefaultCurrencyCode(),
         ]);
     }
