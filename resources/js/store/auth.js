@@ -25,10 +25,11 @@ export default {
       try {
         commit('clearError');
         await authService.logout();
-        await router.push({ name: 'login', query: { message: 'logout' } });
         commit('clearUserInfo');
       } catch (e) {
         commit('setError', e.response.data.error);
+      } finally {
+        await router.push({ name: 'login', query: { message: 'logout' } });
       }
     },
   },
