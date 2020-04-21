@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 
 import auth from './auth';
 import user from './user';
+import currency from './currency';
 
 Vue.use(Vuex);
 
@@ -25,6 +26,7 @@ const store = new Vuex.Store({
   modules: {
     auth,
     user,
+    currency,
   },
 });
 
