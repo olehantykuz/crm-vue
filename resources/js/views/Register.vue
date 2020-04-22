@@ -69,20 +69,12 @@
       </div>
       <div class="input-field row">
         <div class="col s6">
-          <label class="currency-label" for="selectedCurrency">Валюта</label>
-          <select
-            :value="selectedCurrency"
-            @input="selectCurrency"
-            id="selectedCurrency"
+          <label class="currency-label">Валюта</label>
+          <select-currency
+            :defaultCurrency="selectedCurrency"
+            @toggleCurrency="toggleCurrency"
           >
-            <option
-              v-for="(curr, code) in currencyConversation"
-              :key="curr.id"
-              :value="code"
-            >
-              {{code}}
-            </option>
-          </select>
+          </select-currency>
         </div>
         <div class="col s6">
           <label for="monthly_budget">Месячный бюджет</label>
@@ -148,9 +140,11 @@ import {
   email, minLength, required,
 } from 'vuelidate/lib/validators';
 import { mapActions, mapGetters } from 'vuex';
+import SelectCurrency from '../components/app/SelectCurrency';
 
 export default {
   name: 'Register',
+  components: { SelectCurrency },
   data: () => ({
     email: '',
     password: '',
@@ -168,16 +162,13 @@ export default {
   },
   methods: {
     ...mapActions(['register']),
-    selectCurrency(e) {
-      const oldCurrency = this.selectedCurrency;
-      const newCurrency = e.target.value;
-      const oldRate = this.currencyConversation[oldCurrency].rate;
-      const newRate = this.currencyConversation[newCurrency].rate;
-      this.monthlyBudget = parseFloat(((this.monthlyBudget * newRate) / oldRate).toFixed(2));
+    toggleCurrency(e) {
+      const { newCurrency, rate } = e;
+      this.monthlyBudget = parseFloat(((this.monthlyBudget * rate)).toFixed(2));
       this.selectedCurrency = newCurrency;
     },
     setDefaultSelectedCurrency() {
-      if (this.currencyConversation[this.baseCurrency]) {
+      if (this.baseCurrency) {
         this.selectedCurrency = this.baseCurrency;
       }
     },
@@ -199,11 +190,9 @@ export default {
   },
   computed: {
     ...mapGetters(['currencyConversation', 'baseCurrency']),
-    limit() {
-      return this.monthlyBudget;
-    },
   },
   mounted() {
+    window.M.updateTextFields();
     this.setDefaultSelectedCurrency();
   },
   watch: {
@@ -215,10 +204,5 @@ export default {
 </script>
 
 <style scoped>
-  select {
-    display: block;
-  }
-  .currency-label {
-    display: contents;
-  }
+
 </style>
