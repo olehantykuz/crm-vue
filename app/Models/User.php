@@ -40,6 +40,14 @@ class User extends Authenticatable
     ];
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function defaultOptions()
+    {
+        return $this->hasOne(DefaultOptions::class);
+    }
+
+    /**
      * @return array
      */
     public function getDefaultBudget()
