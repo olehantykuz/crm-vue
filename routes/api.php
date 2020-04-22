@@ -25,6 +25,10 @@ Route::group([
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('logout', 'AuthController@logout');
         Route::get('me', 'AuthController@user');
+
+        Route::group(['prefix' => 'categories'], function () {
+            Route::post('/', 'CategoryController@store');
+        });
     });
 
 });
