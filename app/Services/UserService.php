@@ -23,7 +23,7 @@ class UserService
         ]);
 
         $defaultOptions = new DefaultOptions();
-        $defaultOptions->monthly_budget = $data['monthlyBudget'];
+        $defaultOptions->monthly_budget = (int) ($data['monthlyBudget'] * 100);
         $defaultOptions->currency()->associate($currency);
         $defaultOptions->user()->associate($user);
         $defaultOptions->save();

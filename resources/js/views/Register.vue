@@ -89,6 +89,7 @@
           <input
             id="monthly_budget"
             type="number"
+            step="0.01"
             v-model="monthlyBudget"
             :class="{
               invalid: ($v.monthlyBudget.$dirty && !$v.monthlyBudget.required)
@@ -175,6 +176,11 @@ export default {
       this.monthlyBudget = parseFloat(((this.monthlyBudget * newRate) / oldRate).toFixed(2));
       this.selectedCurrency = newCurrency;
     },
+    setDefaultSelectedCurrency() {
+      if (this.currencyConversation[this.baseCurrency]) {
+        this.selectedCurrency = this.baseCurrency;
+      }
+    },
     async submitHandler() {
       this.$v.$touch();
       if (this.$v.$invalid) {
@@ -185,7 +191,7 @@ export default {
         email: this.email,
         password: this.password,
         name: this.name,
-        monthlyBudget: this.monthlyBudget * 100,
+        monthlyBudget: this.monthlyBudget,
         currencyId: this.currencyConversation[this.selectedCurrency].id,
       };
       await this.register(formData);
@@ -197,11 +203,12 @@ export default {
       return this.monthlyBudget;
     },
   },
+  mounted() {
+    this.setDefaultSelectedCurrency();
+  },
   watch: {
     currencyConversation() {
-      if (this.currencyConversation[this.baseCurrency]) {
-        this.selectedCurrency = this.baseCurrency;
-      }
+      this.setDefaultSelectedCurrency();
     },
   },
 };
