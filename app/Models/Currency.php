@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Currency extends Model
 {
@@ -20,10 +21,18 @@ class Currency extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function defaultUsersOptions()
     {
         return $this->hasMany(DefaultOptions::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
     }
 }
