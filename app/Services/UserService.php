@@ -11,7 +11,7 @@ class UserService
 {
     /**
      * @param array $data
-     * @return mixed
+     * @return User
      */
     public function create(array $data)
     {
