@@ -53,8 +53,8 @@ class User extends Authenticatable
     public function getDefaultBudget()
     {
         return [
-            'total' => config('app.default_budget'),
-            'currency' => config('app.default_currency'),
+            'total' => $this->defaultOptions->monthly_budget / 100,
+            'currency' => $this->defaultOptions->currency->code,
         ];
     }
 
