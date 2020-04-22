@@ -12,10 +12,14 @@ export default {
         commit('setError', e.response.data.error);
       }
     },
-    async register({ commit }, { email, password, name }) {
+    async register({ commit }, {
+      email, password, name, monthlyBudget, currencyId,
+    }) {
       try {
         commit('clearError');
-        await authService.register({ email, password, name });
+        await authService.register({
+          email, password, name, monthlyBudget, currencyId,
+        });
         await router.push({ name: 'login', query: { message: 'register' } });
       } catch (e) {
         commit('setError', e.response.data.error);
