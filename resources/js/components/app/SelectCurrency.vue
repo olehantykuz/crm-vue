@@ -8,6 +8,7 @@
       v-for="(curr, code) in currencyConversation"
       :key="curr.id"
       :value="code"
+      :selected="code === selectedCurrency"
     >
       {{code}}
     </option>
@@ -29,7 +30,7 @@ export default {
   methods: {
     setDefaultSelectedCurrency() {
       const baseCurrency = this.defaultCurrency || '';
-      if (this.currencyConversation[baseCurrency]) {
+      if (baseCurrency) {
         this.selectedCurrency = baseCurrency;
       }
     },
