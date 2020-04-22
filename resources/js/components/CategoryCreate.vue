@@ -5,25 +5,47 @@
         <h4>Создать</h4>
       </div>
 
-      <form>
+      <form @submit.prevent="submitHandler">
         <div class="input-field">
           <input
             id="name"
             type="text"
+            v-model="title"
+            :class="{invalid: $v.title.$dirty && !$v.title.required}"
           >
           <label for="name">Название</label>
-          <span class="helper-text invalid">Введите название</span>
-        </div>
-
-        <div class="input-field">
-          <input
-            id="limit"
-            type="number"
+          <span
+            v-if="$v.title.$dirty && !$v.title.required"
+            class="helper-text invalid"
           >
-          <label for="limit">Лимит</label>
-          <span class="helper-text invalid">Минимальная величина</span>
+            Введите название категории
+          </span>
         </div>
 
+        <div class="row">
+          <div class="input-field col s8">
+            <input
+              id="limit"
+              type="number"
+              step="0.01"
+              v-model="limit"
+              :class="{invalid: $v.limit.$dirty && !$v.limit.positive}"
+            >
+            <label for="limit">Лимит</label>
+            <span
+              v-if="$v.limit.$dirty && !$v.limit.positive"
+              class="helper-text invalid"
+            >
+              Значение лимита должно быть больше 0
+            </span>
+          </div>
+          <div class="input-field col s4">
+            <select-currency
+              :defaultCurrency="selectedCurrency"
+              @toggleCurrency="toggleCurrency"
+            ></select-currency>
+          </div>
+        </div>
         <button class="btn waves-effect waves-light" type="submit">
           Создать
           <i class="material-icons right">send</i>
@@ -34,8 +56,57 @@
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators';
+import { mapGetters } from 'vuex';
+import SelectCurrency from './app/SelectCurrency';
+
 export default {
   name: 'CategoryCreate',
+  components: { SelectCurrency },
+  data: () => ({
+    title: '',
+    limit: 1,
+    selectedCurrency: '',
+  }),
+  computed: {
+    ...mapGetters(['info', 'currencyConversation']),
+  },
+  validations: {
+    title: { required },
+    limit: { positive: (v) => v > 0 },
+  },
+  methods: {
+    submitHandler() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+      const formData = {
+        title: this.title.trim(),
+        limit: this.limit,
+        currencyId: this.currencyConversation[this.selectedCurrency].id,
+      };
+
+      console.log(formData);
+    },
+    toggleCurrency(e) {
+      const { newCurrency, rate } = e;
+      this.limit = parseFloat(((this.limit * rate)).toFixed(2));
+      this.selectedCurrency = newCurrency;
+    },
+    setDefaultSelectedCurrency() {
+      this.selectedCurrency = this.info.defaultBudget ? this.info.defaultBudget.currency : '';
+    },
+  },
+  mounted() {
+    this.setDefaultSelectedCurrency();
+    window.M.updateTextFields();
+  },
+  watch: {
+    info() {
+      this.setDefaultSelectedCurrency();
+    },
+  },
 };
 </script>
 
