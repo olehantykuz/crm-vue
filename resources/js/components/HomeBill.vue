@@ -6,7 +6,7 @@
 
         <p
           class="currency-line"
-          v-for="curr of currencyCodes"
+          v-for="curr of sortedCurrencyCodes"
           :key="curr"
         >
           <span>
@@ -32,6 +32,22 @@ export default {
       return bill
         ? bill.total / (this.rates[bill.currency].rate / this.rates[this.baseCurrency].rate)
         : null;
+    },
+    sortedCurrencyCodes() {
+      const codes = this.currencyCodes;
+      if (this.info.defaultBudget) {
+        return codes.sort((a, b) => {
+          if (a === this.info.defaultBudget.currency) {
+            return -1;
+          }
+          if (b === this.info.defaultBudget.currency) {
+            return 1;
+          }
+          return 0;
+        });
+      }
+
+      return codes;
     },
   },
   methods: {

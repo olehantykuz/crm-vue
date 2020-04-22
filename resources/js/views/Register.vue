@@ -67,6 +67,56 @@
           Поле Name не должно быть пустым
         </small>
       </div>
+      <div class="input-field row">
+        <div class="col s6">
+          <label class="currency-label" for="selectedCurrency">Валюта</label>
+          <select
+            :value="selectedCurrency"
+            @input="selectCurrency"
+            id="selectedCurrency"
+          >
+            <option
+              v-for="(curr, code) in currencyConversation"
+              :key="curr.id"
+              :value="code"
+            >
+              {{code}}
+            </option>
+          </select>
+        </div>
+        <div class="col s6">
+          <label for="monthly_budget">Месячный бюджет</label>
+          <input
+            id="monthly_budget"
+            type="number"
+            step="0.01"
+            v-model="monthlyBudget"
+            :class="{
+              invalid: ($v.monthlyBudget.$dirty && !$v.monthlyBudget.required)
+              || ($v.monthlyBudget.$dirty && !$v.monthlyBudget.numeric)
+              || ($v.monthlyBudget.$dirty && !$v.monthlyBudget.minValue)
+            }"
+          >
+          <small
+            class="helper-text invalid"
+            v-if="$v.monthlyBudget.$dirty && !$v.monthlyBudget.required"
+          >
+            Поле месячный бюджет не должно быть пустым
+          </small>
+          <small
+            class="helper-text invalid"
+            v-else-if="$v.monthlyBudget.$dirty && !$v.monthlyBudget.numeric"
+          >
+            Месячный бюджет должен быть числом
+          </small>
+          <small
+            class="helper-text invalid"
+            v-else-if="$v.monthlyBudget.$dirty && !$v.monthlyBudget.minValue"
+          >
+            Месячный бюджет должен быть положительным числом
+          </small>
+        </div>
+      </div>
       <p>
         <label>
           <input type="checkbox" v-model="agree"/>
@@ -94,8 +144,10 @@
 </template>
 
 <script>
-import { email, minLength, required } from 'vuelidate/lib/validators';
-import { mapActions } from 'vuex';
+import {
+  email, minLength, required,
+} from 'vuelidate/lib/validators';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'Register',
@@ -103,16 +155,32 @@ export default {
     email: '',
     password: '',
     name: '',
+    monthlyBudget: 1000,
     agree: false,
+    selectedCurrency: '',
   }),
   validations: {
     email: { email, required },
     password: { required, minLength: minLength(6) },
     name: { required },
     agree: { checked: (v) => v },
+    monthlyBudget: { required, numeric: (v) => !!parseFloat(v), minValue: (v) => v > 0 },
   },
   methods: {
     ...mapActions(['register']),
+    selectCurrency(e) {
+      const oldCurrency = this.selectedCurrency;
+      const newCurrency = e.target.value;
+      const oldRate = this.currencyConversation[oldCurrency].rate;
+      const newRate = this.currencyConversation[newCurrency].rate;
+      this.monthlyBudget = parseFloat(((this.monthlyBudget * newRate) / oldRate).toFixed(2));
+      this.selectedCurrency = newCurrency;
+    },
+    setDefaultSelectedCurrency() {
+      if (this.currencyConversation[this.baseCurrency]) {
+        this.selectedCurrency = this.baseCurrency;
+      }
+    },
     async submitHandler() {
       this.$v.$touch();
       if (this.$v.$invalid) {
@@ -123,13 +191,34 @@ export default {
         email: this.email,
         password: this.password,
         name: this.name,
+        monthlyBudget: this.monthlyBudget,
+        currencyId: this.currencyConversation[this.selectedCurrency].id,
       };
       await this.register(formData);
+    },
+  },
+  computed: {
+    ...mapGetters(['currencyConversation', 'baseCurrency']),
+    limit() {
+      return this.monthlyBudget;
+    },
+  },
+  mounted() {
+    this.setDefaultSelectedCurrency();
+  },
+  watch: {
+    currencyConversation() {
+      this.setDefaultSelectedCurrency();
     },
   },
 };
 </script>
 
 <style scoped>
-
+  select {
+    display: block;
+  }
+  .currency-label {
+    display: contents;
+  }
 </style>

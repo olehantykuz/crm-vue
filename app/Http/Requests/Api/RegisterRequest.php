@@ -27,6 +27,14 @@ class RegisterRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6'],
+            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
+            'monthlyBudget' => ['required', 'numeric',
+                function ($attribute, $value, $fail) {
+                    if ($value <= 0) {
+                        $fail($attribute.' must be greater than 0.');
+                    }
+                },
+            ],
         ];
     }
 }

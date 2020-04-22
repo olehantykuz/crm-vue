@@ -18,4 +18,12 @@ class Currency extends Model
     {
         return $this->hasOne(CurrencyConversation::class);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function defaultUsersOptions()
+    {
+        return $this->hasMany(DefaultOptions::class);
+    }
 }

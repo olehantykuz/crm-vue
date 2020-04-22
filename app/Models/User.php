@@ -40,13 +40,21 @@ class User extends Authenticatable
     ];
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function defaultOptions()
+    {
+        return $this->hasOne(DefaultOptions::class);
+    }
+
+    /**
      * @return array
      */
     public function getDefaultBudget()
     {
         return [
-            'total' => config('app.default_budget'),
-            'currency' => config('app.default_currency'),
+            'total' => $this->defaultOptions->monthly_budget / 100,
+            'currency' => $this->defaultOptions->currency->code,
         ];
     }
 
