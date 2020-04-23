@@ -57,7 +57,7 @@
 
 <script>
 import { required } from 'vuelidate/lib/validators';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import SelectCurrency from './app/SelectCurrency';
 
 export default {
@@ -69,14 +69,15 @@ export default {
     selectedCurrency: '',
   }),
   computed: {
-    ...mapGetters(['info', 'currencyConversation']),
+    ...mapGetters(['info', 'currencyConversation', 'error']),
   },
   validations: {
     title: { required },
     limit: { positive: (v) => v > 0 },
   },
   methods: {
-    submitHandler() {
+    ...mapActions(['createCategory']),
+    async submitHandler() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         return;
@@ -87,7 +88,16 @@ export default {
         currencyId: this.currencyConversation[this.selectedCurrency].id,
       };
 
-      console.log(formData);
+      try {
+        const category = await this.createCategory(formData);
+        this.title = '';
+        this.limit = 1;
+        this.$v.$reset();
+        this.$message('Категория успешно создана');
+        this.$emit('created', { category });
+      } catch (e) {
+        this.$error(this.error);
+      }
     },
     toggleCurrency(e) {
       const { newCurrency, rate } = e;
