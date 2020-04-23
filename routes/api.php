@@ -27,6 +27,7 @@ Route::group([
         Route::get('me', 'AuthController@user');
 
         Route::group(['prefix' => 'categories'], function () {
+            Route::get('/', 'CategoryController@index');
             Route::post('/', 'CategoryController@store');
         });
     });

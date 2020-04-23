@@ -11,6 +11,15 @@ use App\Models\User;
 class CategoryService
 {
     /**
+     * @param User $user
+     * @return mixed
+     */
+    public function getAllByUser(User $user)
+    {
+        return $user->categories;
+    }
+
+    /**
      * @param array $data
      * @param User $user
      * @return Category

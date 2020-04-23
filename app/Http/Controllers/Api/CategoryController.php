@@ -26,6 +26,18 @@ class CategoryController extends Controller
     }
 
     /**
+     * @return JsonResponse
+     */
+    public function index()
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $categories = $this->categoryService->getAllByUser($user);
+
+        return new JsonResponse(['categories' => CategoryResource::collection($categories)]);
+    }
+
+    /**
      * @param Request $request
      * @return JsonResponse
      */
