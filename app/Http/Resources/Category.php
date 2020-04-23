@@ -18,6 +18,7 @@ class Category extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'defaultLimit' => $this->default_limit / 100,
+            'currency' => $this->currency->code,
         ];
     }
 }
