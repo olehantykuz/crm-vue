@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 import CategoryCreate from '../components/CategoryCreate';
 import CategoryEdit from '../components/CategoryEdit';
 
@@ -27,10 +29,21 @@ export default {
   data: () => ({
     categories: [],
   }),
+  computed: {
+    ...mapGetters(['error']),
+  },
   methods: {
+    ...mapActions(['fetchCategories']),
     addCategory(e) {
       this.categories.push(e.category);
     },
+  },
+  async mounted() {
+    try {
+      this.categories = await this.fetchCategories();
+    } catch (e) {
+      this.$error(this.error);
+    }
   },
 };
 </script>
