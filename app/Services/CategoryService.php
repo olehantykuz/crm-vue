@@ -37,4 +37,20 @@ class CategoryService
 
         return $category;
     }
+
+    /**
+     * @param Category $category
+     * @param array $data
+     * @return Category
+     */
+    public function update(Category $category, array $data)
+    {
+        $currency = Currency::find($data['currencyId']);
+        $category->title = $data['title'];
+        $category->default_limit = (int) ($data['limit'] * 100);
+        $category->currency()->associate($currency);
+        $category->save();
+
+        return $category;
+    }
 }
