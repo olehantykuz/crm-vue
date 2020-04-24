@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CreateCategoryRequest;
+use App\Http\Requests\Api\UpdateCategoryRequest;
 use App\Http\Resources\Category as CategoryResource;
+use App\Models\Category;
 use App\Models\User;
 use App\Services\CategoryService;
 use Illuminate\Http\JsonResponse;
@@ -53,5 +55,21 @@ class CategoryController extends Controller
         $category = $this->categoryService->create($request->all(), $user);
 
         return new JsonResponse(['category' => new CategoryResource($category)], 201);
+    }
+
+    /**
+     * @param Category $category
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function update(Category $category, Request $request)
+    {
+        $validator = Validator::make($request->all(), with(new UpdateCategoryRequest())->rules());
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors()->toArray());
+        }
+        $category = $this->categoryService->update($category, $request->all());
+
+        return new JsonResponse(['category' => new CategoryResource($category)], 200);
     }
 }

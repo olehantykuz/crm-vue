@@ -29,6 +29,7 @@ Route::group([
         Route::group(['prefix' => 'categories'], function () {
             Route::get('/', 'CategoryController@index');
             Route::post('/', 'CategoryController@store');
+            Route::put('/{category}', 'CategoryController@update');
         });
     });
 
