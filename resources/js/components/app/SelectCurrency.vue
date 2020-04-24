@@ -1,7 +1,7 @@
 <template>
   <select
-    :value="selectedCurrency"
-    @input="selectCurrency"
+    ref="select"
+    v-model="selectedCurrency"
     id="selectedCurrency"
   >
     <option
@@ -16,49 +16,37 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 export default {
   name: 'SelectCurrency',
-  props: ['defaultCurrency'],
+  props: ['defaultCurrency', 'currencyConversation'],
   data: () => ({
     selectedCurrency: '',
+    select: null,
   }),
-  computed: {
-    ...mapGetters(['currencyConversation']),
-  },
-  methods: {
-    setDefaultSelectedCurrency() {
-      const baseCurrency = this.defaultCurrency || '';
-      if (baseCurrency) {
-        this.selectedCurrency = baseCurrency;
-      }
-    },
-    selectCurrency(e) {
-      const oldCurrency = this.defaultCurrency;
-      const newCurrency = e.target.value;
-      const oldRate = this.currencyConversation[oldCurrency].rate;
-      const newRate = this.currencyConversation[newCurrency].rate;
-      const rate = parseFloat((newRate / oldRate).toFixed(6));
-      this.$emit('toggleCurrency', { oldCurrency, newCurrency, rate });
-    },
+  created() {
+    this.selectedCurrency = this.defaultCurrency;
   },
   mounted() {
-    this.setDefaultSelectedCurrency();
+    this.select = window.M.FormSelect.init(this.$refs.select);
+  },
+  beforeDestroy() {
+    if (this.select && this.select.destroy) {
+      this.select.destroy();
+    }
   },
   watch: {
-    currencyConversation() {
-      this.setDefaultSelectedCurrency();
-    },
-    defaultCurrency() {
-      this.setDefaultSelectedCurrency();
+    selectedCurrency(newCurrency, oldCurrency) {
+      if (newCurrency && oldCurrency) {
+        const oldRate = this.currencyConversation[oldCurrency].rate;
+        const newRate = this.currencyConversation[newCurrency].rate;
+        const rate = newRate / oldRate;
+        this.$emit('toggleCurrency', { oldCurrency, newCurrency, rate });
+      }
     },
   },
 };
 </script>
 
 <style scoped>
-  select {
-    display: block;
-  }
+
 </style>

@@ -41,7 +41,9 @@
           </div>
           <div class="input-field col s4">
             <select-currency
+              v-if="(selectedCurrency && Object.keys(currencyConversation).length)"
               :defaultCurrency="selectedCurrency"
+              :currencyConversation="currencyConversation"
               @toggleCurrency="toggleCurrency"
             ></select-currency>
           </div>
@@ -114,6 +116,9 @@ export default {
   },
   watch: {
     info() {
+      this.setDefaultSelectedCurrency();
+    },
+    currencyConversation() {
       this.setDefaultSelectedCurrency();
     },
   },

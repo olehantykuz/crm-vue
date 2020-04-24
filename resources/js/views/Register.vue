@@ -71,7 +71,9 @@
         <div class="col s6">
           <label class="currency-label">Валюта</label>
           <select-currency
+            v-if="(selectedCurrency && Object.keys(currencyConversation).length)"
             :defaultCurrency="selectedCurrency"
+            :currencyConversation="currencyConversation"
             @toggleCurrency="toggleCurrency"
           >
           </select-currency>
