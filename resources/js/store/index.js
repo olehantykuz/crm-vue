@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 import auth from './auth';
 import user from './user';
 import currency from './currency';
+import category from './category';
 
 Vue.use(Vuex);
 
@@ -27,6 +28,7 @@ const store = new Vuex.Store({
     auth,
     user,
     currency,
+    category,
   },
 });
 

@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class DefaultOptions extends Model
+class Category extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'default_options';
+    protected $table = 'categories';
     protected $fillable = [
-        'monthlyBudget'
+        'title',
+        'limit',
     ];
 
     /**

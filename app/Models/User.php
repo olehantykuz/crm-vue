@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     use Notifiable,
-        HasApiTokens;
+        HasApiTokens,
+        SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -45,6 +47,14 @@ class User extends Authenticatable
     public function defaultOptions()
     {
         return $this->hasOne(DefaultOptions::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
     }
 
     /**
