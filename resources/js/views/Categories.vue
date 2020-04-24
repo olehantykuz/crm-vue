@@ -4,7 +4,8 @@
       <h3>Категории</h3>
     </div>
     <section>
-      <div class="row">
+      <loader v-if="loading"></loader>
+      <div v-else class="row">
         <category-create
           @created="addCategory"
         ></category-create>
@@ -28,6 +29,7 @@ export default {
   },
   data: () => ({
     categories: [],
+    loading: true,
   }),
   computed: {
     ...mapGetters(['error']),
@@ -44,6 +46,7 @@ export default {
     } catch (e) {
       this.$error(this.error);
     }
+    this.loading = false;
   },
 };
 </script>
