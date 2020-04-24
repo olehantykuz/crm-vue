@@ -10,11 +10,15 @@
           @created="addCategory"
         ></category-create>
         <category-edit
+          v-if="categories.length"
           :categories="categories"
           :displayedCategory="updatedId"
           @updated="updateCategory"
           :key="categories.length + updateCount"
         ></category-edit>
+        <p v-else class="center">
+          Категорий пока нет
+        </p>
       </div>
     </section>
   </div>
