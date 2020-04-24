@@ -3,6 +3,7 @@ import categoryService from '../api/category';
 export default {
   state: {
     requestCreateCategory: false,
+    requestUpdateCategory: false,
     requestFetchCategories: false,
   },
   actions: {
@@ -19,6 +20,22 @@ export default {
       } catch (e) {
         commit('setError', e.response.data.error);
         commit('finishRequestCreateCategory');
+        throw e;
+      }
+    },
+    async updateCategory({ commit }, { categoryId, data }) {
+      commit('clearError');
+      commit('sendingRequestUpdateCategory');
+      let category = null;
+      try {
+        const response = await categoryService.update(categoryId, data);
+        category = response.data.category;
+        commit('finishRequestUpdateCategory');
+
+        return category;
+      } catch (e) {
+        commit('setError', e.response.data.error);
+        commit('finishRequestUpdateCategory');
         throw e;
       }
     },
@@ -45,6 +62,12 @@ export default {
     },
     finishRequestCreateCategory(state) {
       state.requestCreateCategory = false;
+    },
+    sendingRequestUpdateCategory(state) {
+      state.requestUpdateCategory = true;
+    },
+    finishRequestUpdateCategory(state) {
+      state.requestUpdateCategory = false;
     },
     sendingRequestFetchCategories(state) {
       state.requestFetchCategories = true;

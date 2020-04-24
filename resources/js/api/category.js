@@ -7,6 +7,12 @@ const create = (data) => axios({
   data,
 }).then((response) => response);
 
+const update = (categoryId, data) => axios({
+  url: `${baseUrl}/${categoryId}`,
+  method: 'put',
+  data,
+}).then((response) => response);
+
 const fetchAll = () => axios({
   url: baseUrl,
   method: 'get',
@@ -14,6 +20,7 @@ const fetchAll = () => axios({
 
 const categoryService = {
   create,
+  update,
   fetchAll,
 };
 
