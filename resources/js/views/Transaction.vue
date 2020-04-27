@@ -100,7 +100,7 @@ import { required } from 'vuelidate/lib/validators';
 import SelectCategory from '../components/app/SelectCategory';
 
 export default {
-  name: 'Record',
+  name: 'Transaction',
   data: () => ({
     loading: true,
     type: 'outcome',
@@ -124,21 +124,28 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['fetchCategories']),
-    submitHandler() {
+    ...mapActions(['fetchCategories', 'createTransaction']),
+    async submitHandler() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         return;
       }
       const formData = {
-        categoryId: this.categoryId,
         amount: this.amount,
         description: this.description,
         type: this.type,
         currencyId: this.currencyConversation[this.currency].id,
       };
 
-      console.log(formData);
+      try {
+        await this.createTransaction({ categoryId: this.categoryId, data: formData });
+        this.description = '';
+        this.amount = 1;
+        this.$v.$reset();
+        this.$message('Транзакция успешно создана');
+      } catch (e) {
+        this.$error(this.error);
+      }
     },
   },
   async mounted() {
