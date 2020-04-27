@@ -3,16 +3,18 @@
     <div class="page-title">
       <h3>Новая запись</h3>
     </div>
-
-    <form class="form">
-      <div class="input-field">
-        <select>
-          <option
-          >name cat
-          </option>
-        </select>
-        <label>Выберите категорию</label>
-      </div>
+    <loader v-if="loading"></loader>
+    <p
+      class="center"
+      v-else-if="!categories.length"
+    >
+      Категорий пока нет. <router-link to="/categories">Добавить новую категорию</router-link>
+    </p>
+    <form class="form" v-else>
+      <select-category
+        v-if="categories.length"
+        :categories="categories"
+      ></select-category>
 
       <p>
         <label>
@@ -21,6 +23,7 @@
             name="type"
             type="radio"
             value="income"
+            v-model="type"
           />
           <span>Доход</span>
         </label>
@@ -33,6 +36,7 @@
             name="type"
             type="radio"
             value="outcome"
+            v-model="type"
           />
           <span>Расход</span>
         </label>
@@ -66,8 +70,31 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
+import SelectCategory from '../components/app/SelectCategory';
+
 export default {
   name: 'Record',
+  data: () => ({
+    loading: true,
+    type: 'outcome',
+  }),
+  components: { SelectCategory },
+  computed: {
+    ...mapGetters(['categories', 'currentCategory']),
+    categoryId() {
+      return this.currentCategory;
+    },
+  },
+  methods: {
+    ...mapActions(['fetchCategories']),
+  },
+  async mounted() {
+    if (!this.categories.length) {
+      await this.fetchCategories();
+    }
+    this.loading = false;
+  },
 };
 </script>
 
