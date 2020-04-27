@@ -5,6 +5,8 @@ export default {
     requestCreateCategory: false,
     requestUpdateCategory: false,
     requestFetchCategories: false,
+    categories: [],
+    current: null,
   },
   actions: {
     async createCategory({ commit }, data) {
@@ -15,8 +17,8 @@ export default {
         const response = await categoryService.create(data);
         category = response.data.category;
         commit('finishRequestCreateCategory');
-
-        return category;
+        commit('addCategory', category);
+        commit('setCurrent', category.id);
       } catch (e) {
         commit('setError', e.response.data.error);
         commit('finishRequestCreateCategory');
@@ -31,6 +33,7 @@ export default {
         const response = await categoryService.update(categoryId, data);
         category = response.data.category;
         commit('finishRequestUpdateCategory');
+        commit('updateCategory', category);
 
         return category;
       } catch (e) {
@@ -47,13 +50,24 @@ export default {
         const response = await categoryService.fetchAll();
         categories = response.data.categories;
         commit('finishRequestFetchCategories');
-
-        return categories;
+        commit('setCategories', categories);
+        if (categories.length) {
+          commit('setCurrent', categories[0].id);
+        }
       } catch (e) {
         commit('setError', e.response.data.error);
         commit('finishRequestFetchCategories');
         throw e;
       }
+    },
+    addNewCategory({ commit }, category) {
+      commit('addCategory', category);
+    },
+    setCurrentCategory({ commit }, id) {
+      commit('setCurrent', id);
+    },
+    clearCurrentCategory({ commit }) {
+      commit('clearCurrent');
     },
   },
   mutations: {
@@ -75,9 +89,32 @@ export default {
     finishRequestFetchCategories(state) {
       state.requestFetchCategories = false;
     },
+    setCategories(state, categories) {
+      state.categories = categories;
+    },
+    addCategory(state, category) {
+      const { categories } = state;
+      categories.push(category);
+      state.categories = categories;
+    },
+    updateCategory(state, category) {
+      const categories = state.categories.map((cat) => (cat.id === category.id ? category : cat));
+      state.categories = categories;
+    },
+    clearCategories(state) {
+      state.categories = [];
+    },
+    setCurrent(state, id) {
+      state.current = id;
+    },
+    clearCurrent(state) {
+      state.current = null;
+    },
   },
   getters: {
     creatingCategory: (s) => s.requestCreateCategory,
     fetchingCategories: (s) => s.requestFetchCategories,
+    categories: (s) => s.categories,
+    current: (s) => s.current,
   },
 };
