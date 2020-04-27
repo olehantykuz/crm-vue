@@ -74,6 +74,15 @@ class CurrencyService
     }
 
     /**
+     * @param int $id
+     * @return Currency|null
+     */
+    public function getById(int $id)
+    {
+        return Currency::find($id);
+    }
+
+    /**
      * @return array
      */
     public function getCurrencyCodes()
