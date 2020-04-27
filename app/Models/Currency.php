@@ -38,4 +38,12 @@ class Currency extends Model
     {
         return $this->hasMany(Category::class);
     }
+
+    /**
+     * @return HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }
