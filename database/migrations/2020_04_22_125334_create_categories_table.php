@@ -16,9 +16,9 @@ class CreateCategoriesTable extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->integer('default_limit');
+            $table->unsignedBigInteger('default_limit');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('currency_id')->nullable();
+            $table->unsignedBigInteger('currency_id');
             $table->timestamps();
 
             $table->foreign('user_id')
@@ -28,7 +28,7 @@ class CreateCategoriesTable extends Migration
             $table->foreign('currency_id')
                 ->references('id')
                 ->on('currencies')
-                ->onDelete('set null');
+                ->cascadeOnDelete();
         });
     }
 
