@@ -50,9 +50,10 @@ export default {
     dropdown: null,
   }),
   methods: {
-    ...mapActions(['logout']),
+    ...mapActions(['logout', 'clearCategories']),
     async signOut() {
       await this.logout();
+      this.clearCategories();
     },
   },
   computed: {

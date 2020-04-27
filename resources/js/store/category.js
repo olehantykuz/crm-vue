@@ -66,7 +66,8 @@ export default {
     setCurrentCategory({ commit }, id) {
       commit('setCurrent', id);
     },
-    clearCurrentCategory({ commit }) {
+    clearCategories({ commit }) {
+      commit('clearCategories');
       commit('clearCurrent');
     },
   },
