@@ -91,12 +91,11 @@ export default {
       };
 
       try {
-        const category = await this.createCategory(formData);
+        await this.createCategory(formData);
         this.title = '';
         this.limit = 1;
         this.$v.$reset();
         this.$message('Категория успешно создана');
-        this.$emit('created', { category });
       } catch (e) {
         this.$error(this.error);
       }
