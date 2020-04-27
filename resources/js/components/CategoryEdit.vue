@@ -86,7 +86,6 @@ export default {
     limit: { positive: (v) => v > 0 },
   },
   data: () => ({
-    select: null,
     title: '',
     limit: 1,
     currency: '',
@@ -140,13 +139,7 @@ export default {
     this.setFormData();
   },
   mounted() {
-    this.select = window.M.FormSelect.init(this.$refs.select);
     window.M.updateTextFields();
-  },
-  beforeDestroy() {
-    if (this.select && this.select.destroy) {
-      this.select.destroy();
-    }
   },
 };
 </script>
