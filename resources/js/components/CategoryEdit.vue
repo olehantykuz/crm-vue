@@ -91,7 +91,7 @@ export default {
     currency: '',
   }),
   computed: {
-    ...mapGetters(['currencyConversation', 'error', 'current']),
+    ...mapGetters(['currencyConversation', 'error', 'currentCategory']),
   },
   methods: {
     ...mapActions(['updateCategory']),
@@ -107,7 +107,9 @@ export default {
       };
 
       try {
-        const category = await this.updateCategory({ categoryId: this.current, data: formData });
+        const category = await this.updateCategory({
+          categoryId: this.currentCategory, data: formData,
+        });
         this.title = category.title;
         this.limit = category.defaultLimit;
         this.currency = category.currency;
@@ -119,8 +121,8 @@ export default {
       }
     },
     setFormData() {
-      const index = this.current
-        ? this.categories.findIndex((c) => c.id === this.current)
+      const index = this.currentCategory
+        ? this.categories.findIndex((c) => c.id === this.currentCategory)
         : 0;
       const {
         title, defaultLimit, currency,
@@ -131,7 +133,7 @@ export default {
     },
   },
   watch: {
-    current() {
+    currentCategory() {
       this.setFormData();
     },
   },

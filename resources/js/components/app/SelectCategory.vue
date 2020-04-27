@@ -27,13 +27,13 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['current']),
+    ...mapGetters(['currentCategory']),
   },
   methods: {
     ...mapActions(['setCurrentCategory']),
   },
   created() {
-    this.selected = this.current;
+    this.selected = this.currentCategory;
   },
   mounted() {
     this.select = window.M.FormSelect.init(this.$refs.select);
@@ -44,11 +44,11 @@ export default {
     }
   },
   watch: {
-    current() {
-      this.selected = this.current;
+    currentCategory() {
+      this.selected = this.currentCategory;
     },
     selected() {
-      if (this.selected !== this.current) {
+      if (this.selected !== this.currentCategory) {
         this.setCurrentCategory(this.selected);
       }
     },

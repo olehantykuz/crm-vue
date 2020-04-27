@@ -116,6 +116,6 @@ export default {
     creatingCategory: (s) => s.requestCreateCategory,
     fetchingCategories: (s) => s.requestFetchCategories,
     categories: (s) => s.categories,
-    current: (s) => s.current,
+    currentCategory: (s) => s.current,
   },
 };
