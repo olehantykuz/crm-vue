@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Currency;
 use App\Models\CurrencyConversation;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
 class CurrencyService
@@ -109,8 +110,11 @@ class CurrencyService
      */
     public function updateConversation(Currency $currency, $rate)
     {
-        if ($currency->conversation) {
-            $currency->conversation
+        $latestConversation = $currency->latestConversation();
+        $now = Carbon::now();
+
+        if ($latestConversation && ($latestConversation->created_at->day === $now->day)) {
+            $currency->latestConversation()
                 ->update(['rate' => $rate]);
 
             return $currency;

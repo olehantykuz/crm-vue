@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Currency extends Model
@@ -16,11 +17,29 @@ class Currency extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function conversation()
     {
         return $this->hasOne(CurrencyConversation::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function conversations()
+    {
+        return $this->hasMany(CurrencyConversation::class);
+    }
+
+    /**
+     * @return Model|HasMany|object|null
+     */
+    public function latestConversation()
+    {
+        return $this->conversations()
+            ->latest()
+            ->first();
     }
 
     /**
