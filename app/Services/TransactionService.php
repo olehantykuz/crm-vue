@@ -5,12 +5,20 @@ namespace App\Services;
 use App\Models\Category;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Repositories\TransactionRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
 class TransactionService
 {
+    protected $transactionRepository;
+
+    public function __construct()
+    {
+        $this->transactionRepository = new TransactionRepository();
+    }
+
     /**
      * @param User $user
      * @param Category $category
@@ -36,6 +44,22 @@ class TransactionService
         ]);
 
         return $transaction;
+    }
+
+    /**
+     * @param Transaction|stdClass $transaction
+     * @return bool|int
+     */
+    public function saveDenormalizedTransaction($transaction)
+    {
+        $id = $transaction->id;
+        $amountData = $this->calculateTransactionAmountForAllCurrencies($transaction);
+
+        if ($this->transactionRepository->getDenormalizedRecordByTransactionId($id)) {
+            return $this->transactionRepository->updateDenormalizedRecord($id, $amountData);
+        } else {
+            return $this->transactionRepository->createDenormalizedRecord($id, $amountData);
+        }
     }
 
     /**
