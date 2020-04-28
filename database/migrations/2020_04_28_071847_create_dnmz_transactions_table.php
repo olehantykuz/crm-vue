@@ -1,6 +1,6 @@
 <?php
 
-use Carbon\Carbon;
+use App\Services\TransactionService;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -27,16 +27,11 @@ class CreateDnmzTransactionsTable extends Migration
                 ->cascadeOnDelete();
         });
 
-        $transactionService = new \App\Services\TransactionService();
+        $transactionService = new TransactionService();
         $transactions = DB::table('transactions')
             ->get();
         foreach ($transactions as $transaction) {
-            $denormalizedData = $transactionService->calculateTransactionAmountForAllCurrencies($transaction);
-            DB::table('dnmz_transactions')
-                ->insert([
-                    'transaction_id' => $transaction->id,
-                    'currencies_amount' => json_encode($denormalizedData),
-                ]);
+            $transactionService->saveDenormalizedTransaction($transaction);
         }
     }
 
