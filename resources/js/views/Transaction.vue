@@ -3,14 +3,18 @@
     <div class="page-title">
       <h3>Новая запись</h3>
     </div>
-    <loader v-if="loading"></loader>
+    <loader v-show="loading"></loader>
     <p
       class="center"
-      v-else-if="!categories.length"
+      v-show="!loading && !categories.length"
     >
       Категорий пока нет. <router-link to="/categories">Добавить новую категорию</router-link>
     </p>
-    <form class="form" v-else @submit.prevent="submitHandler">
+    <form
+      class="form"
+      v-show="!loading && categories.length"
+      @submit.prevent="submitHandler"
+    >
       <select-category
         v-if="categories.length"
         :categories="categories"
@@ -153,9 +157,7 @@ export default {
       await this.fetchCategories();
     }
     this.loading = false;
-    setTimeout(() => {
-      window.M.updateTextFields();
-    }, 0);
+    window.M.updateTextFields();
   },
 };
 </script>
