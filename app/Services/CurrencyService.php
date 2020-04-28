@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Models\Currency;
 use App\Models\CurrencyConversation;
+use App\Repositories\CurrencyRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 
 class CurrencyService
@@ -13,6 +15,8 @@ class CurrencyService
     /** @var string  */
     protected $baseCurrency;
     protected $baseUrl;
+    /** @var CurrencyRepository  */
+    protected $currencyRepository;
 
     /**
      * CurrencyService constructor.
@@ -22,6 +26,7 @@ class CurrencyService
         $this->accessKey = config('services.fixer.access_key');
         $this->baseCurrency = config('app.default_currency');
         $this->baseUrl = 'http://data.fixer.io/api';
+        $this->currencyRepository = new CurrencyRepository();
     }
 
     /**
@@ -127,5 +132,17 @@ class CurrencyService
             ->save($instance);
 
         return $currency;
+    }
+
+    /**
+     * @param string $date
+     * @return Collection
+     */
+    public function getRelevantConversations(string $date)
+    {
+        $nearestDate = $this->currencyRepository->getNearestConversationDateByDate($date)
+            ?? $this->currencyRepository->getLatestConversationDate();
+
+        return $nearestDate ? $this->currencyRepository->getConversationsByDate($nearestDate) : collect([]);
     }
 }
