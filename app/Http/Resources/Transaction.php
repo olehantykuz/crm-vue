@@ -22,6 +22,7 @@ class Transaction extends JsonResource
             'currency' => $this->currency->code,
             'categoryId' => $this->category_id,
             'userId' => $this->user_id,
+            'amountByCurrency' => $this->denormalized ? $this->denormalized->formatted_currencies_amount : null,
         ];
     }
 }
