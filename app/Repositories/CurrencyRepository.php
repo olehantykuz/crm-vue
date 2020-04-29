@@ -47,6 +47,32 @@ class CurrencyRepository
     }
 
     /**
+     * @param int|null $month
+     * @return Collection
+     */
+    public function getLastConversations(?int $month = null)
+    {
+        $recordsNumber = DB::table('currencies')
+            ->whereNull('deleted_at')
+            ->count();
+
+        $query = DB::table('currencies')
+            ->join('currency_conversations', 'currencies.id', '=', 'currency_conversations.currency_id')
+            ->select('currencies.id', 'code', 'rate')
+            ->whereNull('currencies.deleted_at');
+
+        if ($month) {
+            $query->whereMonth('currency_conversations.created_at', $month);
+        }
+
+        return $query->latest('currency_conversations.created_at')
+            ->take($recordsNumber)
+            ->get()
+            ->unique('id')
+            ->keyBy('code');
+    }
+
+    /**
      * @param string $date
      * @return string
      */
