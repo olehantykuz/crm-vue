@@ -7,7 +7,9 @@ use App\Http\Requests\Api\CreateTransactionRequest;
 use App\Http\Resources\Transaction as TransactionResource;
 use App\Models\Category;
 use App\Models\User;
+use App\Services\Bill\BillServiceFactory;
 use App\Services\TransactionService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -41,7 +43,11 @@ class TransactionController extends Controller
         /** @var User $user */
         $user = Auth::user();
         $transaction = $this->transactionService->create($user, $category, $request->all());
+        $billService = BillServiceFactory::getInstance();
 
-        return new JsonResponse(['transaction' => new TransactionResource($transaction)], 201);
+        return new JsonResponse([
+            'transaction' => new TransactionResource($transaction),
+            'monthlyAmounts' => $billService->getTotalAmountInCurrencies($user->id, Carbon::now()->month, true),
+        ], 201);
     }
 }
