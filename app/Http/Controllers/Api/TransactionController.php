@@ -48,7 +48,7 @@ class TransactionController extends Controller
 
         return new JsonResponse([
             'transaction' => new TransactionResource($transaction),
-            'monthlyAmounts' => $billService->getTotalAmountInCurrencies($user->id, $date->month, $date->year, true),
+            'totals' => $billService->getTotalAmountInCurrencies($user->id, $date->month, $date->year, true),
         ], 201);
     }
 
@@ -65,7 +65,7 @@ class TransactionController extends Controller
         $user = Auth::user();
 
         return new JsonResponse([
-            'monthlyAmounts' => $billService->getTotalAmountInCurrencies($user->id, $month, $year, true),
+            'totals' => $billService->getTotalAmountInCurrencies($user->id, $month, $year, true),
         ]);
     }
 }
