@@ -83,7 +83,7 @@ class TransactionService
             foreach ($conversations as $currencyId => $conversation) {
                 $amount = $transactionCurrencyId == $currencyId
                     ? $transaction->amount
-                    : (int) ($transaction->amount * $conversation->rate / $conversations->get($transactionCurrencyId)->rate);
+                    : (int) ($transaction->amount * $currencyService->calculateConversationRate($conversation, $conversations->get($transactionCurrencyId)));
 
                 $data[$currencies->get($currencyId)] = $amount;
             }
