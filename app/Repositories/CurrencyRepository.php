@@ -48,9 +48,10 @@ class CurrencyRepository
 
     /**
      * @param int|null $month
+     * @param int|null $year
      * @return Collection
      */
-    public function getLastConversations(?int $month = null)
+    public function getLastConversations(?int $month = null, ?int $year = null)
     {
         $recordsNumber = DB::table('currencies')
             ->whereNull('deleted_at')
@@ -62,7 +63,9 @@ class CurrencyRepository
             ->whereNull('currencies.deleted_at');
 
         if ($month) {
-            $query->whereMonth('currency_conversations.created_at', $month);
+            $year = $year ?: Carbon::now()->year;
+            $query->whereYear('currency_conversations.created_at', $year)
+                ->whereMonth('currency_conversations.created_at', $month);
         }
 
         return $query->latest('currency_conversations.created_at')

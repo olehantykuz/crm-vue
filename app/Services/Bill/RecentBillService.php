@@ -28,13 +28,14 @@ class RecentBillService extends BillService implements BillServiceInterface
     /**
      * @param int $userId
      * @param int|null $month
+     * @param int|null $year
      * @param bool|null $format
      * @return array
      */
-    public function getTotalAmountInCurrencies(int $userId, ?int $month = null, ?bool $format = false): array
+    public function getTotalAmountInCurrencies(int $userId, ?int $month = null, ?int $year = null, ?bool $format = false): array
     {
-        $data = $this->transactionRepository->getTotals($userId, $month);
-        $conversations = $this->currencyRepository->getLastConversations($month);
+        $data = $this->transactionRepository->getTotals($userId, $month, $year);
+        $conversations = $this->currencyRepository->getLastConversations($month, $year);
 
         $totalAmounts = [];
         foreach ($data as $row) {

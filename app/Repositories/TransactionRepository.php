@@ -12,15 +12,16 @@ class TransactionRepository
     /**
      * @param int $userId
      * @param int|null $month
+     * @param int|null $year
      * @return Collection
      */
-    public function getTotals(int $userId, ?int $month = null)
+    public function getTotals(int $userId, ?int $month = null, ?int $year = null)
     {
         $query = DB::table('transactions')
             ->join('currencies', 'currencies.id', '=', 'transactions.currency_id')
             ->select(DB::raw('SUM(amount) as total, type, code'))
             ->where('user_id', $userId);
-        $query = $this->addMonthScope($query, $month);
+        $query = $this->addMonthScope($query, $month, $year);
 
         return $query->groupBy('code', 'type')
             ->get();
@@ -29,16 +30,17 @@ class TransactionRepository
     /**
      * @param int $userId
      * @param int|null $month
+     * @param int|null $year
      * @return Collection
      */
-    public function getAmountByCurrencies(int $userId, ?int $month = null)
+    public function getAmountByCurrencies(int $userId, ?int $month = null, ?int $year = null)
     {
         $query = DB::table('transactions')
             ->join('dnmz_transactions', 'transactions.id', '=', 'dnmz_transactions.transaction_id')
             ->join('currencies', 'currencies.id', '=', 'transactions.currency_id')
             ->select('type', 'code', 'amount', 'currencies_amount')
             ->where('user_id', $userId);
-        $query = $this->addMonthScope($query, $month);
+        $query = $this->addMonthScope($query, $month, $year);
 
         return $query->get();
     }
@@ -46,16 +48,17 @@ class TransactionRepository
     /**
      * @param int $userId
      * @param int|null $month
+     * @param int|null $year
      * @return Collection
      */
-    public function getTotalsByCategories(int $userId, ?int $month = null)
+    public function getTotalsByCategories(int $userId, ?int $month = null, ?int $year = null)
     {
         $query = DB::table('transactions')
             ->join('categories', 'categories.id', '=', 'transactions.category_id')
             ->join('currencies', 'currencies.id', '=', 'transactions.currency_id')
             ->select(DB::raw('SUM(amount) as total, type, category_id, code'))
             ->where('transactions.user_id', $userId);
-        $query = $this->addMonthScope($query, $month);
+        $query = $this->addMonthScope($query, $month, $year);
 
         return $query->groupBy(['code', 'category_id', 'type'])
             ->get();
@@ -106,12 +109,15 @@ class TransactionRepository
     /**
      * @param Builder $query
      * @param int|null $month
+     * @param int|null $year
      * @return Builder
      */
-    protected function addMonthScope(Builder $query, ?int $month)
+    protected function addMonthScope(Builder $query, ?int $month, ?int $year)
     {
         if($month) {
-            $query->whereMonth('transactions.created_at', $month);
+            $year = $year ?: Carbon::now()->year;
+            $query->whereYear('transactions.created_at', $year)
+                ->whereMonth('transactions.created_at', $month);
         }
 
         return $query;

@@ -44,10 +44,11 @@ class TransactionController extends Controller
         $user = Auth::user();
         $transaction = $this->transactionService->create($user, $category, $request->all());
         $billService = BillServiceFactory::getInstance();
+        $date = Carbon::now();
 
         return new JsonResponse([
             'transaction' => new TransactionResource($transaction),
-            'monthlyAmounts' => $billService->getTotalAmountInCurrencies($user->id, Carbon::now()->month, true),
+            'monthlyAmounts' => $billService->getTotalAmountInCurrencies($user->id, $date->month, $date->year, true),
         ], 201);
     }
 }
