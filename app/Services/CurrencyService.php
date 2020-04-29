@@ -8,6 +8,7 @@ use App\Repositories\CurrencyRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use stdClass;
 
 class CurrencyService
 {
@@ -144,5 +145,15 @@ class CurrencyService
             ?? $this->currencyRepository->getLatestConversationDate();
 
         return $nearestDate ? $this->currencyRepository->getConversationsByDate($nearestDate) : collect([]);
+    }
+
+    /**
+     * @param CurrencyConversation|stdClass $modelFrom
+     * @param CurrencyConversation|stdClass $modelTo
+     * @return float|int
+     */
+    public function calculateConversationRate($modelFrom, $modelTo)
+    {
+        return $modelFrom->rate / $modelTo->rate;
     }
 }
