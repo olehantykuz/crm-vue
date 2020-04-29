@@ -49,10 +49,11 @@ class RecentBillService extends BillService implements BillServiceInterface
                     : (int) ($row->total * $this->currencyService->calculateConversationRate(
                         $conversation, $conversations[$row->code]
                     ));
-                $totalAmounts[$type][$code] += $format ? $this->formatFromCents($amount) : $amount;
+                $totalAmounts[$type][$code] += $format ? $this->formatFromCents($amount) : (int) $amount;
+                $totalAmounts[$type][$code] = $format ? round($totalAmounts[$type][$code], 2) : $totalAmounts[$type][$code];
             }
         }
 
-        return $totalAmounts;
+        return $this->combineResultTotalAmount($totalAmounts, $month, $year);
     }
 }

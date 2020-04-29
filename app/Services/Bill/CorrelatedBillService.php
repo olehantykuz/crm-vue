@@ -37,10 +37,11 @@ class CorrelatedBillService extends BillService implements BillServiceInterface
                 foreach ($transactionAmountByCurrencies as $code => $value) {
                     $totalAmounts[$type][$code] = $totalAmounts[$type][$code] ?? 0;
                     $totalAmounts[$type][$code] += $format ? $this->formatFromCents($value) : $value;
+                    $totalAmounts[$type][$code] = $format ? round($totalAmounts[$type][$code], 2) : $totalAmounts[$type][$code];
                 }
             }
         }
 
-        return $totalAmounts;
+        return $this->combineResultTotalAmount($totalAmounts, $month, $year);
     }
 }

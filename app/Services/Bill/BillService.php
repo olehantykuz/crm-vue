@@ -21,4 +21,21 @@ abstract class BillService implements BillServiceInterface
     {
         return round($value / 100, 2);
     }
+
+    /**
+     * @param array $data
+     * @param int|null $month
+     * @param int|null $year
+     * @return array
+     */
+    protected function combineResultTotalAmount(array $data, ?int $month = null, ?int $year = null): array
+    {
+        return [
+            'amounts' => $data,
+            'date' => [
+                'month' => $month,
+                'year' => $year,
+            ],
+        ];
+    }
 }
