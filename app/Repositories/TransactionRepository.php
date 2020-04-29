@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -10,30 +11,53 @@ class TransactionRepository
 {
     /**
      * @param int $userId
+     * @param int|null $month
      * @return Collection
      */
-    public function getTotals(int $userId)
+    public function getTotals(int $userId, ?int $month = null)
     {
-        return DB::table('transactions')
+        $query = DB::table('transactions')
             ->join('currencies', 'currencies.id', '=', 'transactions.currency_id')
             ->select(DB::raw('SUM(amount) as total, type, code'))
-            ->where('user_id', $userId)
-            ->groupBy('code', 'type')
+            ->where('user_id', $userId);
+        $query = $this->addMonthScope($query, $month);
+
+        return $query->groupBy('code', 'type')
             ->get();
     }
 
     /**
      * @param int $userId
+     * @param int|null $month
      * @return Collection
      */
-    public function getTotalsByCategories(int $userId)
+    public function getAmountByCurrencies(int $userId, ?int $month = null)
     {
-        return DB::table('transactions')
+        $query = DB::table('transactions')
+            ->join('dnmz_transactions', 'transactions.id', '=', 'dnmz_transactions.transaction_id')
+            ->join('currencies', 'currencies.id', '=', 'transactions.currency_id')
+            ->select('type', 'code', 'amount', 'currencies_amount')
+            ->where('user_id', $userId);
+        $query = $this->addMonthScope($query, $month);
+
+        return $query->get();
+    }
+
+    /**
+     * @param int $userId
+     * @param int|null $month
+     * @return Collection
+     */
+    public function getTotalsByCategories(int $userId, ?int $month = null)
+    {
+        $query = DB::table('transactions')
             ->join('categories', 'categories.id', '=', 'transactions.category_id')
             ->join('currencies', 'currencies.id', '=', 'transactions.currency_id')
             ->select(DB::raw('SUM(amount) as total, type, category_id, code'))
-            ->where('transactions.user_id', $userId)
-            ->groupBy(['code', 'category_id', 'type'])
+            ->where('transactions.user_id', $userId);
+        $query = $this->addMonthScope($query, $month);
+
+        return $query->groupBy(['code', 'category_id', 'type'])
             ->get();
     }
 
@@ -70,12 +94,26 @@ class TransactionRepository
 
     /**
      * @param int $id
-     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
+     * @return \Illuminate\Database\Eloquent\Model|Builder|object|null
      */
     public function getDenormalizedRecordByTransactionId(int $id)
     {
         return DB::table('dnmz_transactions')
             ->where('transaction_id', $id)
             ->first();
+    }
+
+    /**
+     * @param Builder $query
+     * @param int|null $month
+     * @return Builder
+     */
+    protected function addMonthScope(Builder $query, ?int $month)
+    {
+        if($month) {
+            $query->whereMonth('transactions.created_at', $month);
+        }
+
+        return $query;
     }
 }
