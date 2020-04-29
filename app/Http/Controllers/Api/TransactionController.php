@@ -51,4 +51,21 @@ class TransactionController extends Controller
             'monthlyAmounts' => $billService->getTotalAmountInCurrencies($user->id, $date->month, $date->year, true),
         ], 201);
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getTotalAmounts(Request $request)
+    {
+        $month = (int) $request->get('month') ?: Carbon::now()->month;
+        $year = (int) $request->get('year') ?: Carbon::now()->year;
+        $billService = BillServiceFactory::getInstance();
+        /** @var User $user */
+        $user = Auth::user();
+
+        return new JsonResponse([
+            'monthlyAmounts' => $billService->getTotalAmountInCurrencies($user->id, $month, $year, true),
+        ]);
+    }
 }

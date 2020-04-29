@@ -25,6 +25,7 @@ Route::group([
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('logout', 'AuthController@logout');
         Route::get('me', 'AuthController@user');
+        Route::get('/transactions/amounts', 'TransactionController@getTotalAmounts');
 
         Route::group(['prefix' => 'categories'], function () {
             Route::get('/', 'CategoryController@index');
