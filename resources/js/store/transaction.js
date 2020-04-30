@@ -14,9 +14,9 @@ export default {
       commit('sendingRequestCreateTransaction');
       try {
         const response = await transactionService.create(categoryId, data);
-        commit('finishRequestCreateTransaction');
         commit('addTransaction', response.data.transaction);
         commit('setTotalsByDate', response.data.totals);
+        commit('finishRequestCreateTransaction');
       } catch (e) {
         commit('setError', e.response.data.error);
         commit('finishRequestCreateTransaction');
@@ -84,5 +84,6 @@ export default {
   getters: {
     transactionsList: (s) => s.transactions,
     totals: (s) => s.totals,
+    fetchingTotals: (s) => s.requestFetchTransactionsTotals,
   },
 };
