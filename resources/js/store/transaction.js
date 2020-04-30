@@ -16,6 +16,7 @@ export default {
         const response = await transactionService.create(categoryId, data);
         commit('finishRequestCreateTransaction');
         commit('addTransaction', response.data.transaction);
+        commit('setTotalsByDate', response.data.totals);
       } catch (e) {
         commit('setError', e.response.data.error);
         commit('finishRequestCreateTransaction');
