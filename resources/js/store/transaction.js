@@ -83,5 +83,6 @@ export default {
   },
   getters: {
     transactionsList: (s) => s.transactions,
+    totals: (s) => s.totals,
   },
 };
