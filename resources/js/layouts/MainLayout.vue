@@ -35,7 +35,7 @@ export default {
     isOpen: true,
   }),
   computed: {
-    ...mapGetters(['info']),
+    ...mapGetters(['info', 'error']),
   },
   methods: {
     ...mapActions(['getAuthUser', 'fetchTotals']),
@@ -46,7 +46,11 @@ export default {
         await this.getAuthUser();
       }
       const date = new Date();
-      await this.fetchTotals(date.getMonth() + 1, date.getFullYear());
+      try {
+        await this.fetchTotals(date.getMonth() + 1, date.getFullYear());
+      } catch (e) {
+        this.$error(this.error);
+      }
     }
   },
 };
