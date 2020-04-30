@@ -4,7 +4,9 @@ export default {
   state: {
     requestCreateTransaction: false,
     requestFetchTransactions: false,
+    requestFetchTransactionsTotals: false,
     transactions: [],
+    totals: {},
   },
   actions: {
     async createTransaction({ commit }, { categoryId, data }) {
@@ -17,6 +19,19 @@ export default {
       } catch (e) {
         commit('setError', e.response.data.error);
         commit('finishRequestCreateTransaction');
+        throw e;
+      }
+    },
+    async fetchTotals({ commit }, { month, year }) {
+      commit('clearError');
+      commit('sendingRequestFetchTransactionsTotals');
+      try {
+        const response = await transactionService.getTotals(month, year);
+        commit('finishRequestFetchTransactionsTotals');
+        commit('setTotalsByDate', response.data.totals);
+      } catch (e) {
+        commit('setError', e.response.data.error);
+        commit('finishRequestFetchTransactionsTotals');
         throw e;
       }
     },
@@ -34,6 +49,12 @@ export default {
     finishRequestFetchTransactions(state) {
       state.requestFetchTransactions = false;
     },
+    sendingRequestFetchTransactionsTotals(state) {
+      state.requestFetchTransactionsTotals = true;
+    },
+    finishRequestFetchTransactionsTotals(state) {
+      state.requestFetchTransactionsTotals = false;
+    },
     setTransactions(state, transactions) {
       state.transactions = transactions;
     },
@@ -44,6 +65,19 @@ export default {
     },
     clearTransactions(state) {
       state.transactions = [];
+    },
+    setTotalsByDate(state, data) {
+      const { amounts, date } = data;
+      const { totals } = state;
+      let key = 'all';
+      if (date.year) {
+        key = date.month ? `${date.year}_${date.month}` : date.year;
+      }
+      totals[key] = amounts;
+      state.totals = totals;
+    },
+    clearTransactionTotals(state) {
+      state.totals = {};
     },
   },
   getters: {
