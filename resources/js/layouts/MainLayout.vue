@@ -38,11 +38,15 @@ export default {
     ...mapGetters(['info']),
   },
   methods: {
-    ...mapActions(['getAuthUser']),
+    ...mapActions(['getAuthUser', 'fetchTotals']),
   },
   async mounted() {
-    if (isAuth() && !Object.keys(this.info).length) {
-      await this.getAuthUser();
+    if (isAuth()) {
+      if (!Object.keys(this.info).length) {
+        await this.getAuthUser();
+      }
+      const date = new Date();
+      await this.fetchTotals(date.getMonth() + 1, date.getFullYear());
     }
   },
 };
