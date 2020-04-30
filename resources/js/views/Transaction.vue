@@ -117,7 +117,10 @@ export default {
   },
   components: { SelectCategory },
   computed: {
-    ...mapGetters(['currencyConversation', 'error', 'categories', 'currentCategory']),
+    ...mapGetters(['currencyConversation', 'error', 'categories', 'currentCategory', 'info']),
+    bill() {
+      return this.info.defaultBudget.total;
+    },
     categoryId() {
       return this.currentCategory;
     },
@@ -125,6 +128,13 @@ export default {
       const index = this.categories.findIndex((cat) => (cat.id === this.categoryId));
 
       return index > -1 ? this.categories[index].currency : null;
+    },
+    canCreateTransaction() {
+      if (this.type === 'income') {
+        return true;
+      }
+
+      return this.bill >= this.amount;
     },
   },
   methods: {
@@ -141,14 +151,18 @@ export default {
         currencyId: this.currencyConversation[this.currency].id,
       };
 
-      try {
-        await this.createTransaction({ categoryId: this.categoryId, data: formData });
-        this.description = '';
-        this.amount = 1;
-        this.$v.$reset();
-        this.$message('Транзакция успешно создана');
-      } catch (e) {
-        this.$error(this.error);
+      if (this.canCreateTransaction) {
+        try {
+          await this.createTransaction({ categoryId: this.categoryId, data: formData });
+          this.description = '';
+          this.amount = 1;
+          this.$v.$reset();
+          this.$message('Транзакция успешно создана');
+        } catch (e) {
+          this.$error(this.error);
+        }
+      } else {
+        this.$message(`Недостаточно средств на счете ${this.amount - this.bill}`);
       }
     },
   },
