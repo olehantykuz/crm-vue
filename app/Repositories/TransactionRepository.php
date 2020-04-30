@@ -7,7 +7,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class TransactionRepository
+class TransactionRepository extends Repository
 {
     /**
      * @param int $userId
@@ -21,7 +21,7 @@ class TransactionRepository
             ->join('currencies', 'currencies.id', '=', 'transactions.currency_id')
             ->select(DB::raw('SUM(amount) as total, type, code'))
             ->where('user_id', $userId);
-        $query = $this->addMonthScope($query, $month, $year);
+        $query = $this->addIntervalScope($query, $month, $year);
 
         return $query->groupBy('code', 'type')
             ->get();
@@ -40,7 +40,7 @@ class TransactionRepository
             ->join('currencies', 'currencies.id', '=', 'transactions.currency_id')
             ->select('type', 'code', 'amount', 'currencies_amount')
             ->where('user_id', $userId);
-        $query = $this->addMonthScope($query, $month, $year);
+        $query = $this->addIntervalScope($query, $month, $year);
 
         return $query->get();
     }
@@ -58,7 +58,7 @@ class TransactionRepository
             ->join('currencies', 'currencies.id', '=', 'transactions.currency_id')
             ->select(DB::raw('SUM(amount) as total, type, category_id, code'))
             ->where('transactions.user_id', $userId);
-        $query = $this->addMonthScope($query, $month, $year);
+        $query = $this->addIntervalScope($query, $month, $year);
 
         return $query->groupBy(['code', 'category_id', 'type'])
             ->get();
@@ -112,14 +112,8 @@ class TransactionRepository
      * @param int|null $year
      * @return Builder
      */
-    protected function addMonthScope(Builder $query, ?int $month, ?int $year)
+    protected function addIntervalScope(Builder $query, ?int $month, ?int $year)
     {
-        if($month) {
-            $year = $year ?: Carbon::now()->year;
-            $query->whereYear('transactions.created_at', $year)
-                ->whereMonth('transactions.created_at', $month);
-        }
-
-        return $query;
+        return $this->addMonthYearScope($query, 'transactions.created_at', $month, $year);
     }
 }

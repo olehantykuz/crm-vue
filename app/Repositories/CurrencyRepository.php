@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class CurrencyRepository
+class CurrencyRepository extends Repository
 {
     /**
      * @param string $date
@@ -62,11 +62,7 @@ class CurrencyRepository
             ->select('currencies.id', 'code', 'rate')
             ->whereNull('currencies.deleted_at');
 
-        if ($month) {
-            $year = $year ?: Carbon::now()->year;
-            $query->whereYear('currency_conversations.created_at', $year)
-                ->whereMonth('currency_conversations.created_at', $month);
-        }
+        $query = $this->addMonthYearScope($query, 'currency_conversations.created_at', $month, $year);
 
         return $query->latest('currency_conversations.created_at')
             ->take($recordsNumber)
