@@ -35,14 +35,22 @@ export default {
     isOpen: true,
   }),
   computed: {
-    ...mapGetters(['info']),
+    ...mapGetters(['info', 'error']),
   },
   methods: {
-    ...mapActions(['getAuthUser']),
+    ...mapActions(['getAuthUser', 'fetchTotals']),
   },
   async mounted() {
-    if (isAuth() && !Object.keys(this.info).length) {
-      await this.getAuthUser();
+    if (isAuth()) {
+      if (!Object.keys(this.info).length) {
+        await this.getAuthUser();
+      }
+      const date = new Date();
+      try {
+        await this.fetchTotals(date.getMonth() + 1, date.getFullYear());
+      } catch (e) {
+        this.$error(this.error);
+      }
     }
   },
 };

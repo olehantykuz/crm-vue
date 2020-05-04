@@ -15,10 +15,12 @@ class Currency extends JsonResource
      */
     public function toArray($request)
     {
+        $latestConversation = $this->latestConversation();
+
         return [
             'id' => $this->id,
             'code' => $this->code,
-            'rate' => $this->conversation ? $this->conversation->rate : null,
+            'rate' => $latestConversation ? $latestConversation->rate : null,
             'date' => $this->updated_at->timestamp ?? Carbon::now()->timestamp,
         ];
     }

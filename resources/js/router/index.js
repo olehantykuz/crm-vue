@@ -9,7 +9,7 @@ import Detail from '../views/Detail';
 import History from '../views/History';
 import Planning from '../views/Planning';
 import Profile from '../views/Profile';
-import Record from '../views/Record';
+import Transaction from '../views/Transaction';
 
 Vue.use(Router);
 
@@ -65,10 +65,10 @@ const router = new Router({
       component: Profile,
     },
     {
-      path: '/record',
-      name: 'record',
+      path: '/transaction',
+      name: 'transaction',
       meta: { layout: 'main' },
-      component: Record,
+      component: Transaction,
     },
   ],
 });

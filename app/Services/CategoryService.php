@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Models\Category;
 use App\Models\Currency;
@@ -26,7 +24,7 @@ class CategoryService
      */
     public function create(array $data, User $user)
     {
-        $currency = Currency::find($data['currencyId']);
+        $currency = (new CurrencyService())->getById($data['currencyId']);
 
         $category = new Category();
         $category->title = $data['title'];
@@ -45,7 +43,8 @@ class CategoryService
      */
     public function update(Category $category, array $data)
     {
-        $currency = Currency::find($data['currencyId']);
+        $currency = (new CurrencyService())->getById($data['currencyId']);
+
         $category->title = $data['title'];
         $category->default_limit = (int) ($data['limit'] * 100);
         $category->currency()->associate($currency);

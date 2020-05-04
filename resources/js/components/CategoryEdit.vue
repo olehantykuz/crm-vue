@@ -6,16 +6,9 @@
       </div>
 
       <form @submit.prevent="submitHandler">
-        <div class="input-field">
-          <select ref="select" v-model="current">
-            <option
-              v-for="category of categories"
-              :key="category.id"
-              :value="category.id"
-            >{{category.title}}</option>
-          </select>
-          <label>Выберите категорию</label>
-        </div>
+        <select-category
+          :categories="categories"
+        ></select-category>
 
         <div class="input-field">
           <input
@@ -73,9 +66,11 @@
 <script>
 import { required } from 'vuelidate/lib/validators';
 import { mapGetters, mapActions } from 'vuex';
+import SelectCategory from './app/SelectCategory';
 
 export default {
   name: 'CategoryEdit',
+  components: { SelectCategory },
   props: {
     categories: {
       type: Array,
@@ -91,14 +86,12 @@ export default {
     limit: { positive: (v) => v > 0 },
   },
   data: () => ({
-    select: null,
     title: '',
     limit: 1,
     currency: '',
-    current: null,
   }),
   computed: {
-    ...mapGetters(['currencyConversation', 'error']),
+    ...mapGetters(['currencyConversation', 'error', 'currentCategory']),
   },
   methods: {
     ...mapActions(['updateCategory']),
@@ -114,46 +107,41 @@ export default {
       };
 
       try {
-        const category = await this.updateCategory({ categoryId: this.current, data: formData });
+        const category = await this.updateCategory({
+          categoryId: this.currentCategory, data: formData,
+        });
         this.title = category.title;
         this.limit = category.defaultLimit;
         this.currency = category.currency;
         this.$v.$reset();
         this.$message('Категория успешно обновлена');
-        this.$emit('updated', { category });
+        this.$emit('updated');
       } catch (e) {
         this.$error(this.error);
       }
     },
+    setFormData() {
+      const index = this.currentCategory
+        ? this.categories.findIndex((c) => c.id === this.currentCategory)
+        : 0;
+      const {
+        title, defaultLimit, currency,
+      } = this.categories[index];
+      this.title = title;
+      this.limit = defaultLimit;
+      this.currency = currency;
+    },
   },
   watch: {
-    current(categoryId) {
-      const category = this.categories.find((cat) => cat.id === categoryId);
-      this.title = category.title;
-      this.limit = category.defaultLimit;
-      this.currency = category.currency;
+    currentCategory() {
+      this.setFormData();
     },
   },
   created() {
-    const index = this.displayedCategory
-      ? this.categories.findIndex((c) => c.id === this.displayedCategory)
-      : 0;
-    const {
-      id, title, defaultLimit, currency,
-    } = this.categories[index];
-    this.current = id;
-    this.title = title;
-    this.limit = defaultLimit;
-    this.currency = currency;
+    this.setFormData();
   },
   mounted() {
-    this.select = window.M.FormSelect.init(this.$refs.select);
     window.M.updateTextFields();
-  },
-  beforeDestroy() {
-    if (this.select && this.select.destroy) {
-      this.select.destroy();
-    }
   },
 };
 </script>

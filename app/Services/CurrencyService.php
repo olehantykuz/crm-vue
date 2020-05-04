@@ -4,7 +4,11 @@ namespace App\Services;
 
 use App\Models\Currency;
 use App\Models\CurrencyConversation;
+use App\Repositories\CurrencyRepository;
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use stdClass;
 
 class CurrencyService
 {
@@ -12,6 +16,8 @@ class CurrencyService
     /** @var string  */
     protected $baseCurrency;
     protected $baseUrl;
+    /** @var CurrencyRepository  */
+    protected $currencyRepository;
 
     /**
      * CurrencyService constructor.
@@ -21,6 +27,7 @@ class CurrencyService
         $this->accessKey = config('services.fixer.access_key');
         $this->baseCurrency = config('app.default_currency');
         $this->baseUrl = 'http://data.fixer.io/api';
+        $this->currencyRepository = new CurrencyRepository();
     }
 
     /**
@@ -74,6 +81,15 @@ class CurrencyService
     }
 
     /**
+     * @param int $id
+     * @return Currency|null
+     */
+    public function getById(int $id)
+    {
+        return Currency::find($id);
+    }
+
+    /**
      * @return array
      */
     public function getCurrencyCodes()
@@ -100,8 +116,11 @@ class CurrencyService
      */
     public function updateConversation(Currency $currency, $rate)
     {
-        if ($currency->conversation) {
-            $currency->conversation
+        $latestConversation = $currency->latestConversation();
+        $now = Carbon::now();
+
+        if ($latestConversation && ($latestConversation->created_at->day === $now->day)) {
+            $currency->latestConversation()
                 ->update(['rate' => $rate]);
 
             return $currency;
@@ -114,5 +133,27 @@ class CurrencyService
             ->save($instance);
 
         return $currency;
+    }
+
+    /**
+     * @param string $date
+     * @return Collection
+     */
+    public function getRelevantConversations(string $date)
+    {
+        $nearestDate = $this->currencyRepository->getNearestConversationDateByDate($date)
+            ?? $this->currencyRepository->getLatestConversationDate();
+
+        return $nearestDate ? $this->currencyRepository->getConversationsByDate($nearestDate) : collect([]);
+    }
+
+    /**
+     * @param CurrencyConversation|stdClass $modelFrom
+     * @param CurrencyConversation|stdClass $modelTo
+     * @return float|int
+     */
+    public function calculateConversationRate($modelFrom, $modelTo)
+    {
+        return $modelFrom->rate / $modelTo->rate;
     }
 }

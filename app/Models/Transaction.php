@@ -4,17 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Category extends Model
+class Transaction extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'categories';
+    protected $table = 'transactions';
     protected $fillable = [
-        'title',
-        'limit',
+        'amount',
+        'description',
+        'type',
     ];
 
     /**
@@ -28,16 +29,25 @@ class Category extends Model
     /**
      * @return BelongsTo
      */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
     public function currency()
     {
         return $this->belongsTo(Currency::class);
     }
 
     /**
-     * @return HasMany
+     * @return HasOne
      */
-    public function transactions()
+    public function denormalized()
     {
-        return $this->hasMany(Transaction::class);
+        return $this->hasOne(DenormalizedTransaction::class);
     }
+
 }

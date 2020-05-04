@@ -7,7 +7,6 @@
       <loader v-if="loading"></loader>
       <div v-else class="row">
         <category-create
-          @created="addCategory"
         ></category-create>
         <category-edit
           v-if="categories.length"
@@ -37,29 +36,24 @@ export default {
     CategoryCreate,
   },
   data: () => ({
-    categories: [],
     loading: true,
     updateCount: 0,
     updatedId: null,
   }),
   computed: {
-    ...mapGetters(['error']),
+    ...mapGetters(['error', 'categories']),
   },
   methods: {
     ...mapActions(['fetchCategories']),
-    addCategory(e) {
-      this.categories.push(e.category);
-    },
-    updateCategory(e) {
-      const { category } = e;
-      this.categories = this.categories.map((cat) => (cat.id === category.id ? category : cat));
+    updateCategory() {
       this.updateCount += 1;
-      this.updatedId = category.id;
     },
   },
   async mounted() {
     try {
-      this.categories = await this.fetchCategories();
+      if (!this.categories.length) {
+        await this.fetchCategories();
+      }
     } catch (e) {
       this.$error(this.error);
     }
