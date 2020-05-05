@@ -28,29 +28,13 @@ export default {
     billByCurrencies: [],
   }),
   computed: {
-    ...mapGetters(['totals', 'fetchingTotals', 'defaultBudget']),
+    ...mapGetters(['totals', 'fetchingTotals', 'defaultBudget', 'sortedCurrencyCodes']),
     base() {
       const { defaultBudget: bill } = this;
 
       return bill.currency
         ? bill.total / (this.rates[bill.currency].rate / this.rates[this.baseCurrency].rate)
         : null;
-    },
-    sortedCurrencyCodes() {
-      const codes = this.currencyCodes;
-      if (Object.keys(this.defaultBudget).length) {
-        return codes.sort((a, b) => {
-          if (a === this.defaultBudget.currency) {
-            return -1;
-          }
-          if (b === this.defaultBudget.currency) {
-            return 1;
-          }
-          return 0;
-        });
-      }
-
-      return codes;
     },
   },
   methods: {
