@@ -25,12 +25,13 @@ export default {
         commit('setError', e.response.data.error);
       }
     },
-    async logout({ commit }) {
+    async logout({ commit, dispatch }) {
       try {
         commit('clearError');
         await authService.logout();
         commit('clearUserInfo');
         commit('clearBill');
+        dispatch('clearCategories');
       } catch (e) {
         commit('setError', e.response.data.error);
       } finally {
