@@ -26,6 +26,19 @@ export default {
         throw e;
       }
     },
+    async fetchTransactions({ commit }, { month, year }) {
+      commit('clearError');
+      commit('sendingRequestFetchTransactions');
+      try {
+        const response = await transactionService.getList(month, year);
+        commit('setTransactions', response.data.transactions);
+        commit('finishRequestFetchTransactions');
+      } catch (e) {
+        commit('setError', e.response.data.error);
+        commit('finishRequestFetchTransactions');
+        throw e;
+      }
+    },
     async fetchTotals({ commit }, { month, year }) {
       commit('clearError');
       commit('sendingRequestFetchTransactionsTotals');
