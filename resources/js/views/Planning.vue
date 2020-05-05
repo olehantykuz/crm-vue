@@ -23,8 +23,29 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
+
 export default {
   name: 'Planning',
+  data: () => ({
+    loading: false,
+  }),
+  computed: {
+    ...mapGetters(['categories', 'transactionsList', 'fetchingTransactions']),
+  },
+  methods: {
+    ...mapActions(['fetchCategories', 'fetchTransactions']),
+  },
+  async mounted() {
+    const date = new Date();
+    if (!this.categories.length) {
+      await this.fetchCategories();
+    }
+    if (!this.transactionsList.length && !this.fetchTransactions) {
+      await this.fetchTransactions({ month: date.getMonth() + 1, year: date.getFullYear() });
+    }
+    this.loading = false;
+  },
 };
 </script>
 
