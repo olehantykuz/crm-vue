@@ -2,13 +2,29 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class TransactionRepository extends Repository
 {
+    /**
+     * @param User $user
+     * @param int|null $month
+     * @param int|null $year
+     * @return Collection
+     */
+    public function getListByUser(User $user, ?int $month = null, ?int $year = null)
+    {
+        $query = $user->transactions();
+        $query = $this->addIntervalScope($query, $month, $year);
+
+        return $query->get();
+    }
+
     /**
      * @param int $userId
      * @param int|null $month
@@ -107,12 +123,12 @@ class TransactionRepository extends Repository
     }
 
     /**
-     * @param Builder $query
+     * @param Builder|Relation $query
      * @param int|null $month
      * @param int|null $year
      * @return Builder
      */
-    protected function addIntervalScope(Builder $query, ?int $month, ?int $year)
+    protected function addIntervalScope($query, ?int $month, ?int $year)
     {
         return $this->addMonthYearScope($query, 'transactions.created_at', $month, $year);
     }

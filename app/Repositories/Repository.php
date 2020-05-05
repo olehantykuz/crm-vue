@@ -3,18 +3,19 @@
 namespace App\Repositories;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
 
 class Repository
 {
     /**
-     * @param Builder $query
+     * @param Builder|Relation $query
      * @param string $column
      * @param int|null $month
      * @param int|null $year
      * @return Builder
      */
-    protected function addMonthYearScope(Builder $query, string $column, ?int $month, ?int $year)
+    protected function addMonthYearScope($query, string $column, ?int $month, ?int $year)
     {
         if ($month) {
             $year = $year ?: Carbon::now()->year;
