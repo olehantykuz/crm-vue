@@ -71,7 +71,7 @@ export default {
     selectedCurrency: '',
   }),
   computed: {
-    ...mapGetters(['info', 'currencyConversation', 'error']),
+    ...mapGetters(['currencyConversation', 'error', 'defaultBudget']),
   },
   validations: {
     title: { required },
@@ -106,7 +106,7 @@ export default {
       this.selectedCurrency = newCurrency;
     },
     setDefaultSelectedCurrency() {
-      this.selectedCurrency = this.info.defaultBudget ? this.info.defaultBudget.currency : '';
+      this.selectedCurrency = this.defaultBudget.currency || '';
     },
   },
   mounted() {
@@ -114,7 +114,7 @@ export default {
     window.M.updateTextFields();
   },
   watch: {
-    info() {
+    defaultBudget() {
       this.setDefaultSelectedCurrency();
     },
     currencyConversation() {

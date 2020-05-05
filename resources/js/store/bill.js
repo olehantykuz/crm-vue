@@ -80,6 +80,9 @@ export default {
       transactions.push(transaction);
       state.transactions = transactions;
     },
+    setDefaultBudget(state, payload) {
+      state.defaultBudget = payload;
+    },
     clearTransactions(state) {
       state.transactions = [];
     },
@@ -103,6 +106,7 @@ export default {
   getters: {
     transactionsList: (s) => s.transactions,
     totals: (s) => s.totals,
+    defaultBudget: (s) => s.defaultBudget,
     fetchingTotals: (s) => s.requestFetchTransactionsTotals,
     fetchingTransactions: (s) => s.requestFetchTransactions,
   },
