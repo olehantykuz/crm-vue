@@ -1,13 +1,16 @@
 import transactionService from '../api/transaction';
 
+const defaultState = () => ({
+  requestCreateTransaction: false,
+  requestFetchTransactions: false,
+  requestFetchTransactionsTotals: false,
+  transactions: [],
+  totals: {},
+  defaultBudget: {},
+});
+
 export default {
-  state: {
-    requestCreateTransaction: false,
-    requestFetchTransactions: false,
-    requestFetchTransactionsTotals: false,
-    transactions: [],
-    totals: {},
-  },
+  state: defaultState(),
   actions: {
     async createTransaction({ commit }, { categoryId, data }) {
       commit('clearError');
@@ -79,6 +82,9 @@ export default {
     },
     clearTransactionTotals(state) {
       state.totals = {};
+    },
+    clearBill(state) {
+      Object.assign(state, defaultState());
     },
   },
   getters: {

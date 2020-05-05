@@ -30,6 +30,7 @@ export default {
         commit('clearError');
         await authService.logout();
         commit('clearUserInfo');
+        commit('clearBill');
       } catch (e) {
         commit('setError', e.response.data.error);
       } finally {
