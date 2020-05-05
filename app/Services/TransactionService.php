@@ -21,6 +21,18 @@ class TransactionService
 
     /**
      * @param User $user
+     * @param int|null $month
+     * @param int|null $year
+     * @return \Illuminate\Support\Collection
+     */
+    public function getUserTransactionsByDate(User $user, ?int $month = null, ?int $year = null)
+    {
+        return $this->transactionRepository
+            ->getListByUser($user, $month, $year);
+    }
+
+    /**
+     * @param User $user
      * @param Category $category
      * @param array $data
      * @return Transaction
