@@ -29,6 +29,24 @@ class TransactionController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function index(Request $request)
+    {
+        $month = (int) $request->get('month') ?: Carbon::now()->month;
+        $year = (int) $request->get('year') ?: Carbon::now()->year;
+        /** @var User $user */
+        $user = Auth::user();
+        $transactions = $this->transactionService
+            ->getUserTransactionsByDate($user, $month, $year);
+
+        return new JsonResponse([
+            'transactions' => TransactionResource::collection($transactions),
+        ]);
+    }
+
+    /**
      * @param Category $category
      * @param Request $request
      * @return JsonResponse
