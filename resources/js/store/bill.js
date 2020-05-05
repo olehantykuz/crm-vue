@@ -104,5 +104,6 @@ export default {
     transactionsList: (s) => s.transactions,
     totals: (s) => s.totals,
     fetchingTotals: (s) => s.requestFetchTransactionsTotals,
+    fetchingTransactions: (s) => s.requestFetchTransactions,
   },
 };
