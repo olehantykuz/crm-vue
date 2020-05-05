@@ -47,7 +47,7 @@ export default {
       }
       const date = new Date();
       try {
-        await this.fetchTotals(date.getMonth() + 1, date.getFullYear());
+        await this.fetchTotals({ month: date.getMonth() + 1, year: date.getFullYear() });
       } catch (e) {
         this.$error(this.error);
       }
