@@ -5,12 +5,12 @@ export default {
     info: {},
   },
   actions: {
-    async getAuthUser({ commit }) {
+    async getAuthUser({ commit, dispatch }) {
       try {
         commit('clearError');
         const response = await authService.authUser();
         commit('setUserInfo', response.data.user);
-        commit('setDefaultBudget', response.data.defaultBudget);
+        dispatch('setDefaultBudget', response.data.defaultBudget);
       } catch (e) {
         commit('setError', e.response.data.error);
       }

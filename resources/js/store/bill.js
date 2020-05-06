@@ -6,7 +6,8 @@ const defaultState = () => ({
   interval: null,
   transactions: [],
   totals: {},
-  defaultBudget: {},
+  defaultCurrency: null,
+  defaultMonthlyBill: 0,
 });
 
 export default {
@@ -41,8 +42,18 @@ export default {
         throw e;
       }
     },
+    setDefaultBudget({ commit }, { currency, total }) {
+      commit('setDefaultCurrency', currency);
+      commit('setDefaultMonthlyBill', total);
+    },
   },
   mutations: {
+    setDefaultCurrency(state, currency) {
+      state.defaultCurrency = currency;
+    },
+    setDefaultMonthlyBill(state, defaultValue) {
+      state.defaultMonthlyBill = defaultValue;
+    },
     setCurrentInterval(state, { month, year }) {
       state.interval = `${year}_${month}`;
     },
@@ -65,9 +76,6 @@ export default {
       const { transactions } = state;
       transactions.push(transaction);
       state.transactions = transactions;
-    },
-    setDefaultBudget(state, payload) {
-      state.defaultBudget = payload;
     },
     clearTransactions(state) {
       state.transactions = [];
@@ -92,13 +100,12 @@ export default {
   getters: {
     transactionsList: (s) => s.transactions,
     totals: (s) => s.totals,
-    defaultBudget: (s) => s.defaultBudget,
     base: (state, getters, rootState) => {
-      const { defaultBudget: bill } = state;
+      const { defaultCurrency, defaultMonthlyBill } = state;
       const { currencyConversation: rates, baseCurrency } = rootState.currency;
 
-      return bill.currency
-        ? bill.total / (rates[bill.currency].rate / rates[baseCurrency].rate)
+      return defaultCurrency
+        ? defaultMonthlyBill / (rates[defaultCurrency].rate / rates[baseCurrency].rate)
         : null;
     },
     billInCurrencies: (state, getters, rootState, rootGetters) => (interval) => {
@@ -131,9 +138,10 @@ export default {
 
       return result;
     },
-    fetchingTotals: (s) => s.requestFetchTransactionsTotals,
     fetchingTransactions: (s) => s.requestFetchTransactions,
     currentInterval: (s) => s.interval,
+    defaultCurrency: (s) => s.defaultCurrency,
+    monthlyBill: (s) => s.defaultMonthlyBill,
     bill: (s, g) => g.billInCurrencies(s.interval),
   },
 };

@@ -117,9 +117,9 @@ export default {
   },
   components: { SelectCategory },
   computed: {
-    ...mapGetters(['currencyConversation', 'error', 'categories', 'currentCategory', 'defaultBudget']),
+    ...mapGetters(['currencyConversation', 'error', 'categories', 'currentCategory', 'monthlyBill']),
     bill() {
-      return this.defaultBudget.total;
+      return this.monthlyBill;
     },
     categoryId() {
       return this.currentCategory;

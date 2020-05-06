@@ -2,10 +2,16 @@
   <div>
     <div class="page-title">
       <h3>Планирование</h3>
-      <h4>12 212</h4>
+      <h4>12 212 {{ defaultCurrency }}</h4>
     </div>
-
-    <section>
+    <loader v-if="loading"></loader>
+    <p
+      class="center"
+      v-else-if="!categories.length"
+    >
+      Категорий пока нет. <router-link to="/categories">Добавить новую категорию</router-link>
+    </p>
+    <section v-else>
       <div>
         <p>
           <strong>Девушка:</strong>
@@ -28,10 +34,10 @@ import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'Planning',
   data: () => ({
-    loading: false,
+    loading: true,
   }),
   computed: {
-    ...mapGetters(['categories', 'transactionsList', 'fetchingTransactions']),
+    ...mapGetters(['categories', 'transactionsList', 'bill', 'defaultCurrency', 'defaultMonthlyBill']),
   },
   methods: {
     ...mapActions(['fetchCategories', 'fetchTransactions']),
