@@ -104,7 +104,7 @@ export default {
       const { defaultCurrency, defaultMonthlyBill } = state;
       const { currencyConversation: rates, baseCurrency } = rootState.currency;
 
-      return defaultCurrency
+      return defaultCurrency && Object.keys(rates).length
         ? defaultMonthlyBill / (rates[defaultCurrency].rate / rates[baseCurrency].rate)
         : null;
     },
@@ -129,7 +129,7 @@ export default {
           }
         }
 
-        return (base * rates[code].rate + sumTransactions);
+        return (base * rates[code].rate + sumTransactions).toFixed(2);
       }
 
       sortedCurrencyCodes.forEach((code) => {
