@@ -23,56 +23,14 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'HomeBill',
-  props: ['rates', 'baseCurrency', 'currencyCodes'],
-  data: () => ({
-    billByCurrencies: [],
-  }),
   computed: {
-    ...mapGetters(['totals', 'fetchingTotals', 'defaultBudget', 'sortedCurrencyCodes']),
-    base() {
-      const { defaultBudget: bill } = this;
+    ...mapGetters(['bill']),
+    billByCurrencies() {
+      return this.bill.map((item) => {
+        const { value } = item;
 
-      return bill.currency
-        ? bill.total / (this.rates[bill.currency].rate / this.rates[this.baseCurrency].rate)
-        : null;
-    },
-  },
-  methods: {
-    getCurrency(code) {
-      return (this.base * this.rates[code].rate).toFixed(2);
-    },
-    getBillInCurrency(code) {
-      const date = new Date();
-      const key = `${date.getFullYear()}_${date.getMonth() + 1}`;
-      let sumTransactions = 0;
-      if (this.totals && this.totals[key]) {
-        if (this.totals[key].income) {
-          sumTransactions += this.totals[key].income[code] || 0;
-        }
-        if (this.totals[key].outcome) {
-          sumTransactions -= this.totals[key].outcome[code] || 0;
-        }
-      }
-
-      return (this.base * this.rates[code].rate + sumTransactions).toFixed(2);
-    },
-    calculateBillInCurrencies() {
-      const result = [];
-      this.sortedCurrencyCodes.forEach((code) => {
-        result.push({ code, value: this.getBillInCurrency(code) });
+        return { ...item, value: value.toFixed(2) };
       });
-
-      this.billByCurrencies = result;
-    },
-  },
-  mounted() {
-    this.calculateBillInCurrencies();
-  },
-  watch: {
-    fetchingTotals(status) {
-      if (!status) {
-        this.calculateBillInCurrencies();
-      }
     },
   },
 };

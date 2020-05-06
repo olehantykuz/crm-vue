@@ -14,16 +14,6 @@ const create = (categoryId, data) => axios({
   data,
 }).then((response) => response);
 
-const getTotals = (month, year) => {
-  const queryString = buildMonthYearQueryString(month, year);
-  const url = `${transactionsBaseUrl}/amounts?${queryString}`;
-
-  return axios({
-    url,
-    method: 'get',
-  }).then((response) => response);
-};
-
 const getList = (month, year) => {
   const queryString = buildMonthYearQueryString(month, year);
   const url = `${transactionsBaseUrl}?${queryString}`;
@@ -36,7 +26,6 @@ const getList = (month, year) => {
 
 const transactionService = {
   create,
-  getTotals,
   getList,
 };
 

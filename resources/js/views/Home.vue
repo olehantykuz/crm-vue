@@ -11,16 +11,8 @@
     <loader v-if="loading"></loader>
 
     <div v-else class="row">
-      <home-bill
-        :rates="currencyConversation"
-        :baseCurrency="baseCurrency"
-        :currencyCodes="currencyCodes"
-      ></home-bill>
-      <home-currency
-        :rates="currencyConversation"
-        :baseCurrency="baseCurrency"
-        :currencyCodes="currencyCodes"
-      ></home-currency>
+      <home-bill></home-bill>
+      <home-currency></home-currency>
     </div>
   </div>
 </template>
@@ -41,9 +33,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters([
-      'fetchingCurrencies', 'currencyConversation', 'baseCurrency', 'currencyCodes',
-    ]),
+    ...mapGetters(['fetchingCurrencies']),
     loading() {
       return this.fetchingCurrencies;
     },

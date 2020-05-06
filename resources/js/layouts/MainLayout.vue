@@ -38,7 +38,7 @@ export default {
     ...mapGetters(['info', 'error']),
   },
   methods: {
-    ...mapActions(['getAuthUser', 'fetchTotals', 'fetchTransactions']),
+    ...mapActions(['getAuthUser', 'fetchTransactions']),
   },
   async mounted() {
     if (isAuth()) {
@@ -48,7 +48,6 @@ export default {
       const date = new Date();
       const monthYear = { month: date.getMonth() + 1, year: date.getFullYear() };
       try {
-        await this.fetchTotals(monthYear);
         await this.fetchTransactions(monthYear);
       } catch (e) {
         this.$error(this.error);
