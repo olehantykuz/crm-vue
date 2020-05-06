@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="page-title">
+    <div v-if="!loading" class="page-title">
       <h3>Планирование</h3>
-      <h4>12 212 {{ defaultCurrency }}</h4>
+      <h4>{{ budget | currency(defaultCurrency) }}</h4>
     </div>
     <loader v-if="loading"></loader>
     <p
@@ -37,7 +37,17 @@ export default {
     loading: true,
   }),
   computed: {
-    ...mapGetters(['categories', 'transactionsList', 'bill', 'defaultCurrency', 'defaultMonthlyBill']),
+    ...mapGetters(['categories', 'transactionsList', 'bill', 'defaultCurrency', 'monthlyBill']),
+    budget() {
+      let result = null;
+      if (this.bill.length) {
+        const item = this.bill.find((row) => row.code === this.defaultCurrency);
+
+        result = item ? item.value : null;
+      }
+
+      return result;
+    },
   },
   methods: {
     ...mapActions(['fetchCategories', 'fetchTransactions']),
