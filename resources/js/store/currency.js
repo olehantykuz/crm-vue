@@ -41,6 +41,24 @@ export default {
     baseCurrency: (state) => state.baseCurrency,
     currencyConversation: (state) => state.currencyConversation,
     currencyCodes: (state) => Object.keys(state.currencyConversation),
+    sortedCurrencyCodes: (state, getters, rootState, rootGetters) => {
+      const codes = getters.currencyCodes;
+      const { defaultCurrency } = rootGetters;
+
+      if (defaultCurrency) {
+        return codes.sort((a, b) => {
+          if (a === defaultCurrency) {
+            return -1;
+          }
+          if (b === defaultCurrency) {
+            return 1;
+          }
+          return 0;
+        });
+      }
+
+      return codes;
+    },
     fetchingCurrencies: (state) => state.fetchingCurrencyRates,
   },
 };

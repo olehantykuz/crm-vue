@@ -84,6 +84,7 @@ class AuthController extends Controller
 
         return response()->json([
             'user' => new UserResource($user),
+            'defaultBudget' => $user->getDefaultBudget(),
         ]);
     }
 }

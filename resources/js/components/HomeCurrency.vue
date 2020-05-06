@@ -37,12 +37,19 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'HomeCurrency',
-  props: ['rates', 'baseCurrency', 'currencyCodes'],
   data: () => ({
     selected: '',
   }),
+  computed: {
+    ...mapGetters(['baseCurrency', 'currencyCodes', 'currencyConversation']),
+    rates() {
+      return this.currencyConversation;
+    },
+  },
   methods: {
     getConversation(currentCode) {
       return this.selected
