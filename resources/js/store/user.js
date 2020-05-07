@@ -13,6 +13,7 @@ export default {
         dispatch('setDefaultBudget', response.data.defaultBudget);
       } catch (e) {
         commit('setError', e.response.data.error);
+        dispatch('logout');
       }
     },
   },
