@@ -19,7 +19,10 @@
           row.category.defaultLimit | currency(row.category.currency)
           }}
         </p>
-        <div class="progress">
+        <div
+          class="progress"
+          v-tooltip="row.tooltipText"
+        >
           <div
             class="determinate"
             :class="row.progressColor"
@@ -41,7 +44,7 @@ export default {
     categoriesData: [],
   }),
   computed: {
-    ...mapGetters(['categories', 'transactionsList', 'bill', 'defaultCurrency', 'monthlyBill']),
+    ...mapGetters(['categories', 'transactionsList', 'bill', 'defaultCurrency', 'monthlyBill', 'currencyCodes', 'currencyConversation']),
     budget() {
       let result = null;
       if (this.bill.length) {
@@ -61,7 +64,18 @@ export default {
 
       if (transactions.length) {
         categories.forEach((cat) => {
-          const total = {};
+          const { currency, defaultLimit } = cat;
+          const ballanceInCurr = {};
+          const baseRate = this.currencyConversation[currency].rate;
+          this.currencyCodes.forEach((code) => {
+            const { rate } = this.currencyConversation[code];
+            ballanceInCurr[code] = parseFloat(((defaultLimit * rate) / baseRate).toFixed(2));
+          });
+          const total = {
+            spend: {},
+            balance: ballanceInCurr,
+          };
+
           transactions
             .filter((t) => {
               const tDate = new Date(t.date * 1000);
@@ -73,14 +87,16 @@ export default {
             .filter((t) => t.type === 'outcome')
             .forEach((t) => {
               Object.keys(t.amountByCurrency).forEach((code) => {
-                total[code] = total[code] || 0;
-                total[code] += +t.amountByCurrency[code];
+                total.spend[code] = total.spend[code] || 0;
+                total.spend[code] += +t.amountByCurrency[code];
+                total.balance[code] -= (t.amountByCurrency[code]);
+                total.balance[code] = parseFloat((total.balance[code]).toFixed(2));
+                total.spend[code] = parseFloat((total.spend[code]).toFixed(2));
               });
             });
 
-          const { currency } = cat;
-          const totalInDefaultCurrency = total[currency];
-          const percent = (totalInDefaultCurrency / cat.defaultLimit) * 100;
+          const totalInDefaultCurrency = total.spend[currency];
+          const percent = (totalInDefaultCurrency / defaultLimit) * 100;
           const progressPercent = percent > 100 ? 100 : percent;
 
           // eslint-disable-next-line no-nested-ternary
@@ -88,11 +104,22 @@ export default {
             ? 'green'
             : (percent < 100 ? 'yellow' : 'red');
 
+          let tooltipText = '<table><tr><td>Остаток</td><td>Затраты</td></tr>';
+          this.currencyCodes.forEach((code) => {
+            tooltipText += `<tr>
+                                <td>${total.balance[code]} ${code}; </td>
+                                <td>${total.spend[code]} ${code};</td>
+                            </tr>`;
+          });
+          tooltipText += '</table>';
+
           this.categoriesData.push({
             category: cat,
             progressPercent,
             progressColor,
             totalInDefaultCurrency,
+            total,
+            tooltipText,
           });
         });
       }
