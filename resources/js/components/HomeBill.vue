@@ -6,7 +6,7 @@
 
         <p
           class="currency-line"
-          v-for="curr of billByCurrencies"
+          v-for="curr of bill"
           :key="curr.code"
         >
           <span>
@@ -25,13 +25,6 @@ export default {
   name: 'HomeBill',
   computed: {
     ...mapGetters(['bill']),
-    billByCurrencies() {
-      return this.bill.map((item) => {
-        const { value } = item;
-
-        return { ...item, value: value.toFixed(2) };
-      });
-    },
   },
 };
 </script>
