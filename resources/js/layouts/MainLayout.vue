@@ -13,7 +13,10 @@
     </main>
 
     <div class="fixed-action-btn">
-      <router-link class="btn-floating btn-large blue" :to="{name: 'record'}">
+      <router-link
+        class="btn-floating btn-large blue" :to="{name: 'record'}"
+        v-tooltip="'Добавить новую транзакцию'"
+      >
         <i class="large material-icons">add</i>
       </router-link>
     </div>
