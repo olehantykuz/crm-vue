@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
+import { isAuth } from '../helpers';
+
 import Login from '../views/Login';
 import Register from '../views/Register';
 import Home from '../views/Home';
@@ -31,46 +33,56 @@ const router = new Router({
     {
       name: 'home',
       path: '/',
-      meta: { layout: 'main' },
+      meta: { layout: 'main', auth: true },
       component: Home,
     },
     {
       path: '/categories',
       name: 'categories',
-      meta: { layout: 'main' },
+      meta: { layout: 'main', auth: true },
       component: Categories,
     },
     {
       path: '/detail/:id',
       name: 'detail',
-      meta: { layout: 'main' },
+      meta: { layout: 'main', auth: true },
       component: Detail,
     },
     {
       path: '/history',
       name: 'history',
-      meta: { layout: 'main' },
+      meta: { layout: 'main', auth: true },
       component: History,
     },
     {
       path: '/planning',
       name: 'planning',
-      meta: { layout: 'main' },
+      meta: { layout: 'main', auth: true },
       component: Planning,
     },
     {
       path: '/profile',
       name: 'profile',
-      meta: { layout: 'main' },
+      meta: { layout: 'main', auth: true },
       component: Profile,
     },
     {
       path: '/transaction',
       name: 'transaction',
-      meta: { layout: 'main' },
+      meta: { layout: 'main', auth: true },
       component: Transaction,
     },
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  const requireAuth = to.meta.auth;
+
+  if (!isAuth() && requireAuth) {
+    next('/login?message=login');
+  } else {
+    next();
+  }
 });
 
 export default router;
