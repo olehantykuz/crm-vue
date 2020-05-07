@@ -36,6 +36,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import currencyFilter from '../filters/currency.filter';
 
 export default {
   name: 'Planning',
@@ -107,8 +108,8 @@ export default {
           let tooltipText = '<table><tr><td>Остаток</td><td>Затраты</td></tr>';
           this.currencyCodes.forEach((code) => {
             tooltipText += `<tr>
-                                <td>${total.balance[code]} ${code}; </td>
-                                <td>${total.spend[code]} ${code};</td>
+                                <td>${currencyFilter(total.balance[code], code)}; </td>
+                                <td>${currencyFilter(total.spend[code], code)};</td>
                             </tr>`;
           });
           tooltipText += '</table>';
