@@ -38,6 +38,9 @@ export default {
       return this.fetchingCurrencies;
     },
   },
+  mounted() {
+    this.refresh();
+  },
 };
 </script>
 
