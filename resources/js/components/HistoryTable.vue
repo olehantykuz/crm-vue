@@ -12,16 +12,25 @@
     </thead>
 
     <tbody>
-    <tr>
-      <td>1</td>
-      <td>1212</td>
-      <td>12.12.32</td>
-      <td>name</td>
+    <tr v-for="(transaction, index) in transactions" :key="transaction.id">
+      <td>{{ index + 1 }}</td>
+      <td>{{ transaction.formattedAmount }}</td>
+      <td>{{ transaction.formattedDate }}</td>
+      <td>{{ transaction.categoryName }}</td>
       <td>
-        <span class="white-text badge red">Расход</span>
+        <span
+          class="white-text badge"
+          :class="transaction.cssClass"
+        >
+          {{ transaction.typeText }}
+        </span>
       </td>
       <td>
-        <button class="btn-small btn">
+        <button
+          v-tooltip="'Подробно'"
+          class="btn-small btn"
+          @click="$router.push(`/transactions/${transaction.id}`)"
+        >
           <i class="material-icons">open_in_new</i>
         </button>
       </td>
@@ -33,6 +42,12 @@
 <script>
 export default {
   name: 'HistoryTable',
+  props: {
+    transactions: {
+      required: true,
+      type: Array,
+    },
+  },
 };
 </script>
 
