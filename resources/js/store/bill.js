@@ -3,6 +3,7 @@ import transactionService from '../api/transaction';
 const defaultState = () => ({
   requestCreateTransaction: false,
   requestFetchTransactions: false,
+  requestFetchTransaction: false,
   interval: null,
   transactions: [],
   totals: {},
@@ -42,6 +43,20 @@ export default {
         throw e;
       }
     },
+    async fetchTransaction({ commit }, id) {
+      commit('clearError');
+      commit('sendingRequestFetchTransaction');
+      try {
+        const response = await transactionService.getById(id);
+        commit('finishRequestFetchTransaction');
+
+        return response.data.transaction;
+      } catch (e) {
+        commit('setError', e.response.data.error || e.response.data.message);
+        commit('finishRequestFetchTransaction');
+        throw e;
+      }
+    },
     setDefaultBudget({ commit }, { currency, total }) {
       commit('setDefaultCurrency', currency);
       commit('setDefaultMonthlyBill', total);
@@ -68,6 +83,12 @@ export default {
     },
     finishRequestFetchTransactions(state) {
       state.requestFetchTransactions = false;
+    },
+    sendingRequestFetchTransaction(state) {
+      state.requestFetchTransaction = true;
+    },
+    finishRequestFetchTransaction(state) {
+      state.requestFetchTransaction = false;
     },
     setTransactions(state, transactions) {
       state.transactions = transactions;
@@ -139,6 +160,7 @@ export default {
       return result;
     },
     fetchingTransactions: (s) => s.requestFetchTransactions,
+    fetchingTransaction: (s) => s.requestFetchTransaction,
     currentInterval: (s) => s.interval,
     defaultCurrency: (s) => s.defaultCurrency,
     monthlyBill: (s) => s.defaultMonthlyBill,
