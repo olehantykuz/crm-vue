@@ -6,9 +6,9 @@
 
     <div v-else>
       <div class="breadcrumb-wrap">
-        <a href="/history" class="breadcrumb">История</a>
-        <a class="breadcrumb">
-          Расход
+        <router-link to="/history" class="breadcrumb">История</router-link>
+        <a @click.prevent class="breadcrumb">
+          {{ transaction.type === 'outcome' ? 'Расход' : 'Доход' }}
         </a>
       </div>
       <div class="row">
