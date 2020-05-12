@@ -24,9 +24,15 @@ const getList = (month, year) => {
   }).then((response) => response);
 };
 
+const getById = (id) => axios({
+  url: `${transactionsBaseUrl}/${id}`,
+  method: 'get',
+}).then((response) => response);
+
 const transactionService = {
   create,
   getList,
+  getById,
 };
 
 export default transactionService;

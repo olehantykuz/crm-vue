@@ -27,6 +27,7 @@ Route::group([
         Route::get('me', 'AuthController@user');
         Route::group(['prefix' => 'transactions'], function () {
             Route::get('/', 'TransactionController@index');
+            Route::get('{id}', 'TransactionController@show');
         });
 
         Route::group(['prefix' => 'categories'], function () {

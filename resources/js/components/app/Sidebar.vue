@@ -22,7 +22,7 @@ export default {
       { title: 'Счет', url: '/', exact: true },
       { title: 'История', url: '/history' },
       { title: 'Планирование', url: '/planning' },
-      { title: 'Новая транзакция', url: '/transaction' },
+      { title: 'Новая транзакция', url: '/transactions' },
       { title: 'Категории', url: '/categories' },
     ],
   }),

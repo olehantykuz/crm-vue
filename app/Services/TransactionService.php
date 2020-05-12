@@ -7,6 +7,9 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Repositories\TransactionRepository;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
@@ -33,6 +36,20 @@ class TransactionService
 
     /**
      * @param User $user
+     * @param int $transactionId
+     * @return Collection|HasMany|HasMany[]|null
+     *
+     * @throws ModelNotFoundException
+     */
+    public function getUserTransactionById(User $user, int $transactionId)
+    {
+        return $user->transactions()
+            ->with('category')
+            ->findOrFail($transactionId);
+    }
+
+    /**
+     * @param User $user
      * @param Category $category
      * @param array $data
      * @return Transaction
@@ -43,7 +60,7 @@ class TransactionService
         $transaction = new Transaction();
 
         $transaction->type = $data['type'];
-        $transaction->amount = (int) ($data['amount'] * 100);
+        $transaction->amount = (int)($data['amount'] * 100);
         $transaction->description = $data['description'];
         $transaction->user()->associate($user);
         $transaction->category()->associate($category);
@@ -95,7 +112,7 @@ class TransactionService
             foreach ($conversations as $currencyId => $conversation) {
                 $amount = $transactionCurrencyId == $currencyId
                     ? $transaction->amount
-                    : (int) ($transaction->amount * $currencyService->calculateConversationRate($conversation, $conversations->get($transactionCurrencyId)));
+                    : (int)($transaction->amount * $currencyService->calculateConversationRate($conversation, $conversations->get($transactionCurrencyId)));
 
                 $data[$currencies->get($currencyId)] = $amount;
             }

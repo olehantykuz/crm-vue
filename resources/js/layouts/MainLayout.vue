@@ -38,10 +38,10 @@ export default {
     isOpen: true,
   }),
   computed: {
-    ...mapGetters(['info', 'error']),
+    ...mapGetters(['info', 'error', 'fetchingCategories', 'categories']),
   },
   methods: {
-    ...mapActions(['getAuthUser', 'fetchTransactions']),
+    ...mapActions(['getAuthUser', 'fetchTransactions', 'fetchCategories']),
   },
   async mounted() {
     if (isAuth()) {
@@ -51,6 +51,9 @@ export default {
       const date = new Date();
       const monthYear = { month: date.getMonth() + 1, year: date.getFullYear() };
       try {
+        if (!this.categories.length && !this.fetchingCategories) {
+          await this.fetchCategories();
+        }
         await this.fetchTransactions(monthYear);
       } catch (e) {
         this.$error(this.error);

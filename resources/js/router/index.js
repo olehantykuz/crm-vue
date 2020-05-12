@@ -43,7 +43,7 @@ const router = new Router({
       component: Categories,
     },
     {
-      path: '/detail/:id',
+      path: '/transactions/:id',
       name: 'detail',
       meta: { layout: 'main', auth: true },
       component: Detail,
@@ -67,7 +67,7 @@ const router = new Router({
       component: Profile,
     },
     {
-      path: '/transaction',
+      path: '/transactions',
       name: 'transaction',
       meta: { layout: 'main', auth: true },
       component: Transaction,

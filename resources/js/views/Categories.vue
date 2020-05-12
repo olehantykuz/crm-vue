@@ -41,7 +41,7 @@ export default {
     updatedId: null,
   }),
   computed: {
-    ...mapGetters(['error', 'categories']),
+    ...mapGetters(['error', 'categories', 'fetchingCategories']),
   },
   methods: {
     ...mapActions(['fetchCategories']),
@@ -51,7 +51,7 @@ export default {
   },
   async mounted() {
     try {
-      if (!this.categories.length) {
+      if (!this.categories.length && !this.fetchingCategories) {
         await this.fetchCategories();
       }
     } catch (e) {

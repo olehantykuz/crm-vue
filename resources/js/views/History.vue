@@ -8,43 +8,52 @@
       <canvas></canvas>
     </div>
 
-    <section>
-      <table>
-        <thead>
-        <tr>
-          <th>#</th>
-          <th>Сумма</th>
-          <th>Дата</th>
-          <th>Категория</th>
-          <th>Тип</th>
-          <th>Открыть</th>
-        </tr>
-        </thead>
+    <p v-if="!transactions.length" class="center">
+      Транзакций пока нет.
+      <router-link to="/transactions"> Добавить новую транзакцию.</router-link>
+    </p>
 
-        <tbody>
-        <tr>
-          <td>1</td>
-          <td>1212</td>
-          <td>12.12.32</td>
-          <td>name</td>
-          <td>
-            <span class="white-text badge red">Расход</span>
-          </td>
-          <td>
-            <button class="btn-small btn">
-              <i class="material-icons">open_in_new</i>
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+    <section v-else>
+      <history-table
+        :transactions="transactions"
+      ></history-table>
     </section>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import HistoryTable from '../components/HistoryTable';
+import currencyFilter from '../filters/currency.filter';
+import dateFilter from '../filters/date.filter';
+
 export default {
   name: 'History',
+  components: { HistoryTable },
+  computed: {
+    ...mapGetters(['categories', 'currentInterval', 'transactionsList']),
+    transactions() {
+      const currentDate = new Date();
+
+      return this.transactionsList.filter((t) => {
+        const tDate = new Date(t.date * 1000);
+
+        return (tDate.getMonth() === currentDate.getMonth())
+          && (tDate.getFullYear() === currentDate.getFullYear());
+      }).map((t) => {
+        const category = this.categories.find((cat) => cat.id === t.categoryId);
+
+        return {
+          ...t,
+          categoryName: category.title,
+          formattedAmount: currencyFilter(t.amount, t.currency),
+          formattedDate: dateFilter(new Date(t.date * 1000)),
+          cssClass: t.type === 'outcome' ? 'red' : 'green',
+          typeText: t.type === 'outcome' ? 'Расход' : 'Доход',
+        };
+      });
+    },
+  },
 };
 </script>
 

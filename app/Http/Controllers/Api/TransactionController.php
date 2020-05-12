@@ -49,6 +49,22 @@ class TransactionController extends Controller
     }
 
     /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function show(int $id)
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $transaction = $this->transactionService
+            ->getUserTransactionById($user, $id);
+
+        return new JsonResponse([
+            'transaction' => new TransactionResource($transaction),
+        ]);
+    }
+
+    /**
      * @param Category $category
      * @param Request $request
      * @return JsonResponse
