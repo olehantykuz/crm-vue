@@ -24,7 +24,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "axios": "^0.19",
+        "axios": "^0.21",
         "lodash": "^4.17.13",
         "materialize-css": "^1.0.0",
         "popper.js": "^1.12",
